@@ -1,0 +1,61 @@
+﻿@model ScadaWeb.Model.ScadaHtmlPageModel
+
+@{ ViewBag.Title = "添加新页面";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml"; }
+
+<form class="layui-form layui-form-pane ok-form" lay-filter="formTest">
+    <input type="hidden" name="Id" value="@Model.Id">
+    <input type="hidden" name="PageUid" value="@Model.PageUid">
+    <input type="hidden" name="PageUrl" value="@Model.PageUrl">
+    <input type="hidden" name="CreateTime" value="@Model.CreateTime">
+    <input type="hidden" name="UpdateTime" value="@Model.UpdateTime">
+    <input type="hidden" name="SortCode" value="@Model.SortCode">
+    <div class="layui-form-item">
+        <label class="layui-form-label">页面标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="PageTitle" placeholder="PageTitle" autocomplete="off" class="layui-input" lay-verify="required" value="@Model.PageTitle" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">页面备注</label>
+        <div class="layui-input-block">
+            <input type="text" name="Remark" placeholder="Remark" autocomplete="off" class="layui-input" lay-verify="required" value="@Model.Remark" />
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(["form", "okLayer", "okUtils"], function () {
+
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+
+
+        form.on("submit(add)", function (data) {
+
+
+
+
+            okUtils.ajax("/Scada/ScadaWebPage/Add", "post", data.field, true).done(function (response) {
+                okLayer.greenTickMsg(response.message, function () {
+                    parent.location.reload(); // 父页面刷新
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));//先得到当前iframe层的索引 再执行关闭
+                });
+            }).fail(function (error) {
+                console.log(error)
+            });
+            return false;
+        });
+
+    });
+</script>
+

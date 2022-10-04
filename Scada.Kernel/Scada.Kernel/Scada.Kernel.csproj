@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{212E09D3-A5AB-4141-8AD0-B9246381690E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Scada.Kernel</RootNamespace>
+    <AssemblyName>Scada.Kernel</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="HslCommunication, Version=9.6.1.0, Culture=neutral, PublicKeyToken=cdb2261fa039ed67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\HslCommunicationDemo-v10.6.1\HslCommunication.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ICommunicationKernel\SimulatorDeviceEditControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ICommunicationKernel\SimulatorDeviceEditControl.Designer.cs">
+      <DependentUpon>SimulatorDeviceEditControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ICommunicationKernel\SimulatorEditDeviceDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ICommunicationKernel\SimulatorEditDeviceDialog.Designer.cs">
+      <DependentUpon>SimulatorEditDeviceDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ICommunicationKernel\SimulatorEditDeviceParaDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ICommunicationKernel\SimulatorEditDeviceParaDialog.Designer.cs">
+      <DependentUpon>SimulatorEditDeviceParaDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ICommunicationKernel\ScadaCommunicateKernel.cs" />
+    <Compile Include="ICommunicationKernel\CommunicationKernelControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ICommunicationKernel\CommunicationKernelControl.Designer.cs">
+      <DependentUpon>CommunicationKernelControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="delegate.cs" />
+    <Compile Include="ICommunicationKernel\SimulatorKernelControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ICommunicationKernel\SimulatorKernelControl.Designer.cs">
+      <DependentUpon>SimulatorKernelControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IDeviceKernel\ScadaDeviceKernel.cs" />
+    <Compile Include="IDeviceKernel\IODeviceKernelControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IDeviceKernel\IODeviceKernelControl.Designer.cs">
+      <DependentUpon>IODeviceKernelControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IDeviceKernel\IOParaKernelControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IDeviceKernel\IOParaKernelControl.Designer.cs">
+      <DependentUpon>IOParaKernelControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ParaPack.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskHelper.cs" />
+    <EmbeddedResource Include="ICommunicationKernel\CommunicationKernelControl.resx">
+      <DependentUpon>CommunicationKernelControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ICommunicationKernel\SimulatorDeviceEditControl.resx">
+      <DependentUpon>SimulatorDeviceEditControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ICommunicationKernel\SimulatorEditDeviceDialog.resx">
+      <DependentUpon>SimulatorEditDeviceDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ICommunicationKernel\SimulatorEditDeviceParaDialog.resx">
+      <DependentUpon>SimulatorEditDeviceParaDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ICommunicationKernel\SimulatorKernelControl.resx">
+      <DependentUpon>SimulatorKernelControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IDeviceKernel\IODeviceKernelControl.resx">
+      <DependentUpon>IODeviceKernelControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IDeviceKernel\IOParaKernelControl.resx">
+      <DependentUpon>IOParaKernelControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Scada.Base\Scada.DBUtility\Scada.DBUtility.csproj">
+      <Project>{0988C62E-247F-471F-A183-DB509C7A3839}</Project>
+      <Name>Scada.DBUtility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Components\Scada.Logger\Scada.Logger.csproj">
+      <Project>{faca4c7e-b4c3-4738-b981-7a1b3d4d1d0a}</Project>
+      <Name>Scada.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.DBModel\Scada.BLL\Scada.Business.csproj">
+      <Project>{38d7aa58-c95b-449b-86c6-a8073a56e11f}</Project>
+      <Name>Scada.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.DBModel\Scada.Model\Scada.Model.csproj">
+      <Project>{53995dbb-9836-4647-ad22-865884fdeb9e}</Project>
+      <Name>Scada.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Scada.IOStructure\Scada.IOStructure.csproj">
+      <Project>{ea7a9840-d2f5-44e3-a7f4-07430a305d34}</Project>
+      <Name>Scada.IOStructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

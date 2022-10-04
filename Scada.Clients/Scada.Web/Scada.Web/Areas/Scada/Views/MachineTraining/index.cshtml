@@ -1,0 +1,153 @@
+﻿@model  ScadaWeb.Model.ScadaMachineTrainingModel
+@{
+    ViewBag.Title = "机器学习管理";
+    Layout = "~/Views/Shared/_LayoutList.cshtml";
+}
+
+<!--模糊搜索区域-->
+<div class="layui-row">
+    <form class="layui-form layui-col-md12 ok-search">
+        <div class="layui-input-inline">
+
+            <input id="TaskName" name="TaskName" placeholder="请输入任务名称" class="layui-input" lay-filter="">
+        </div>
+        <div class="layui-input-inline">
+            <input class="layui-input" placeholder="开始日期" autocomplete="off" name="StartDate" id="StartDate" value="@Model.StartDate">
+
+        </div>
+        <div class="layui-input-inline">
+            <input class="layui-input" placeholder="结束日期" autocomplete="off" name="EndDate" id="EndDate" value="@Model.EndDate">
+        </div>
+        @Html.SearchBtnHtml("查询")
+        @Html.ResetBtnHtml()
+
+    </form>
+</div>
+<!--数据表格-->
+<table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+
+<script>
+   
+    layui.use(["table", "form", "okLayer", "okUtils", "laydate"], function () {
+        let table = layui.table;
+        let form = layui.form;
+
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+
+        let startdate = layui.laydate;
+        let enddate = layui.laydate;
+        var $ = layui.$;
+
+
+        startdate.render({
+            elem: '#StartDate'
+            , type: 'datetime'
+        });
+        enddate.render({
+            elem: '#EndDate'
+            , type: 'datetime'
+        });
+
+        let AllTable = table.render({
+            elem: "#tableId",
+            url: "/Scada/MachineTraining/MachineTrainingList",
+            limit: 30,
+            limits: [10, 20, 30, 50, 60, 80, 100, 150, 200, 300],
+            width: document.body.clientWidth - 10,
+            height: 'full-40',
+            page: true,
+            loading: false,
+            toolbar: "#toolbarTpl",
+            id: 'MachineTraining',
+            jump: function (obj, first) {
+                if (!first) {
+                    layer.msg('第 ' + obj.curr + ' 页');
+                }
+            },
+
+            size: "sm",
+            cols: [[
+                { field: 'zizeng', width: 60, title: '序号', fixed: 'left', templet: '#zizeng' },
+                { field: "Id", title: "任务ID", width: 140 },
+                { field: "TaskName", title: "任务名称", width: 100 },
+                { field: "Algorithm", title: "算法", width: 100 },
+                { field: "AlgorithmType", title: "分类", width: 100 },
+                { field: "TrainingCycle", title: "训练周期(次/分钟)", width: 170 },
+                { field: "ForecastPriod", title: "预测周期(次/分钟)", width: 170 },
+                { field: "TrueText", title: "(True)值文本", width: 170 },
+                { field: "FalseText", title: "(False)值文本", width: 170 },
+                { field: "Detection", title: "异常分级", width: 170 },
+                { field: "Properties", title: "属性", width: 170 },
+                { field: "Remark", title: "模型计算参数", width: 100 },
+                { field: "SERVER_NAME", title: "采集站", width: 100 },
+                { field: "CreateTime", title: "创建时间", width: 100, templet: '<span>{{showDate(d.CreateTime)}}<span>' },
+                { field: "", title: "操作", width: 300, templet: '#operationTpl' }
+            ]]
+
+        });
+        form.on("submit(search)", function (data) {
+
+            AllTable.reload({
+                where: data.field,
+                page: { curr: 1 }
+            });
+            return false;
+        });
+        table.on("tool(tableFilter)", function (obj) {
+            let data = obj.data;
+           
+            switch (obj.event) {
+                case "TaskEdit":
+                    TaskEdit(data.Id);//field Id 和 数据库表字段 Id 要一致
+                    break;
+                case "TaskDelete":
+                    TaskDelete(data.Id);//field Id 和 数据库表字段 Id 要一致
+                    break;
+                case "TaskSpecimen":
+                    TaskSpecimen(data.Id, data.TaskName);//field Id 和 数据库表字段 Id 要一致
+                    break;
+            }
+        });
+        $('#TaskAdd').on('click', function () {
+            okLayer.open("增加任务", "/Scada/MachineTraining/MachineTrainingAdd/0", "100%", "100%", null, null);
+        });
+ 
+        
+        function TaskEdit(id) {
+            okLayer.open("编辑任务", "/Scada/MachineTraining/MachineTrainingAdd/" + id, "100%", "100%", null, null);
+        }
+        function TaskSpecimen(id,title) {
+            okLayer.open("" + title +"-样本编辑", "/Scada/MachineTraining/MachineTrainingCondition/" + id, "100%", "100%", null, null);
+        }
+        
+        function TaskDelete(id) {
+            okLayer.confirm("确定要删除吗？", function () {
+                okUtils.ajax("/Scada/MachineTraining/MachineTrainingDelete/" + id, "get", { id: id }, true).done(function (response) {
+                    okUtils.tableSuccessMsg(response.message);
+                    //没开启分页，没确定按钮，手动刷新
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1500);
+                }).fail(function (error) {
+                    console.log(error)
+                });
+            })
+        }
+
+    })
+</script>
+<script type="text/html" id="toolbarTpl">
+    <button class='layui-btn layui-btn-sm '   lay-event='TaskAdd' id='TaskAdd'><i class='ok-icon'></i>添加任务</button>
+</script>
+<!-- 行工具栏模板 -->
+<script type="text/html" id="operationTpl">
+    <a class='layui-btn layui-btn-xs' href='javascript:;' lay-event='TaskEdit' id='TaskEdit'><i class='ok-icon'></i>编辑任务</a>
+    <a class='layui-btn layui-btn-xs' href='javascript:;' lay-event='TaskDelete' id='TaskDelete'><i class='ok-icon'></i>删除任务</a>
+    <a class='layui-btn layui-btn-xs' href='javascript:;' lay-event='TaskSpecimen' id='TaskSpecimen;'><i class='ok-icon'></i>编辑样本</a>
+</script>
+<script type="text/html" id="zizeng">
+    {{d.LAY_TABLE_INDEX+1}}
+</script>
+
+

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<IOServer>
+	<MonitorPort>9990</MonitorPort>
+	<FlowPort>9991</FlowPort>
+	<ManagerPort>9992</ManagerPort>
+	<MDSServerPort>9993</MDSServerPort>
+	<MDSServerIP>127.0.0.1</MDSServerIP>
+</IOServer>

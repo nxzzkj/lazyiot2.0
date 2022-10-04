@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+
+#region << 版 本 注 释 >>
+/*----------------------------------------------------------------
+// Copyright (C) 2017 宁夏众智科技有限公司 版权所有。 
+// 开源版本代码仅限个人技术研究使用，未经作者允许严禁商用。宁夏众智科技有限公司是一家油田自动化行业经营多年的软件开发公司，公司承接OA、工控、组态、微信小程序等开发。
+// 对于本系统的相关版权归属宁夏众智科技所有，如果本系统使用第三方开源模块，该模块版权归属原作者所有。
+// 请大家尊重作者的劳动成果，共同促进行业健康发展。
+// 相关技术交流群89226196 ,作者QQ:249250126 作者微信18695221159 邮箱:my820403@126.com
+// 创建者：马勇
+//----------------------------------------------------------------*/
+#endregion
+namespace Scada.DBUtility
+{
+    /// <summary>
+    /// 系统函数指的是System.Math中的固定函数
+    /// 自定义含数指的是MathEx中定义的一些含数
+    /// </summary>
+   public  class FunctionItem
+    {
+       public FunctionItem()
+       {
+           FuncString="";
+           level=0;//0为系统函数,1为自定义函数
+       }
+        //公式说明
+        public string Description = "";
+       public string FuncString
+       {
+           set;
+           get;
+       }
+       public int level
+       {
+           set;
+           get;
+       }
+       /// <summary>
+       /// 保存计算值
+       /// </summary>
+       public double  Value
+       {
+           set;
+           get;
+       }
+        public override string ToString()
+        {
+            return FuncString.ToString();
+        }
+    }
+}

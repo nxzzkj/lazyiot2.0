@@ -1,0 +1,422 @@
+﻿@model ScadaWeb.Model.ScadaEquipmentModel
+@{ ViewBag.Title = "添加模型";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml"; }
+
+<form class="layui-form layui-form-pane ok-form" lay-filter="formTest">
+    <input type="hidden" name="SortCode" value="1">
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.CreateTime)
+    @Html.HiddenFor(x => x.CreateUserId)
+    @Html.HiddenFor(x => x.GroupId)
+    <div class="layui-form-item">
+        <label class="layui-form-label">模型名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="ModelTitle" placeholder="模型名称" autocomplete="off" class="layui-input" value="@Model.ModelTitle" lay-verify="required" />
+        </div>
+    </div>
+
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">IO设置</label>
+        <div class="layui-input-inline">
+            <select name="ServerId" id="ServerId" placeholder="请选择采集站" lay-filter="ServerId" lay-verify="required"></select>
+        </div>
+
+        <div class="layui-input-inline">
+            <select name="CommunicationId" id="CommunicationId" placeholder="请选择通道" lay-filter="CommunicationId" lay-verify="required"></select>
+        </div>
+
+        <div class="layui-input-inline">
+            <select name="DeviceId" id="DeviceId" placeholder="请选择设备" lay-filter="DeviceId" lay-verify="required"></select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item" style="height:300px;">
+        <label class="layui-form-label" style="height:300px; text-anchor:middle;">IO参数</label>
+        <div class="layui-input-block">
+            <div id="ParaList" class=" demo-transfer" style="position:absolute;margin-left: 10px;"></div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> </label>
+        <div class="layui-input-block">
+            <div class="layui-form-mid layui-word-aux">如果没有模版请先在曲线管理模块中增加曲线模版</div>
+        </div>
+    </div>
+    <span id="paraSet">
+
+    </span>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input type="text" name="Remark" id="Remark" placeholder="备注" autocomplete="off" value="@Model.Remark" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(["form", "okLayer", "okUtils", "transfer"], function () {
+
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+        let transfer = layui.transfer;
+        var selectpras = JSON.parse('@MvcHtmlString.Create(Model.JsonParas)');
+        form.on("submit(add)", function (data) {
+            var paras = transfer.getData("ParaList");
+
+
+            var paranames = $("input[data-filter='ParaName']");
+            var paraids = $("input[data-filter='ParaID']");
+            var paratitles = $("input[data-filter='ParaTitle']");
+            var paraunits = $("input[data-filter='ParaUnit']");
+            var serietypes = $("select[data-filter='SerieType']");
+            var serienames = $("select[data-filter='SerieName']");
+            var canwrites = $("select[data-filter='CanWrite']");
+            var paralist = [];
+            for (var i = 0; i < paranames.length; i++) {
+                var para = {};
+                para.Id = 0;
+                para.ParaId = $(paraids[i]).val();
+                para.ParaTitle = $(paratitles[i]).val();
+                para.ParaUnit = $(paraunits[i]).val();
+                para.SerieType = $(serietypes[i]).val();
+                para.SerieName = $(serienames[i]).val();
+                para.ParaName = $(paranames[i]).val();
+                para.CanWrite = $(canwrites[i]).val();
+                para.EquipmentId = 0;
+                para.CreateTime = "";
+                para.CreateUserId = 0;
+                para.UpdateTime = "";
+                para.UpdateUserId = 0;
+                para.SortCode = 0;
+
+                paralist.push(para);
+            }
+            data.field.Paras = paralist;
+            data.field.GroupId = "@Model.GroupId";
+
+            okUtils.ajax("/Scada/ScadaEquipment/EditEquipment", "post", data.field, true).done(function (response) {
+                okLayer.greenTickMsg(response.message, function () {
+                    parent.location.reload(); // 父页面刷新
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));//先得到当前iframe层的索引 再执行关闭
+                });
+            }).fail(function (error) {
+                console.log(error)
+            });
+            return false;
+        });
+        GetStations();
+        GetSerieType();
+        form.on('select(ServerId)', function (data) {
+            GetCommunication();
+        });
+        form.on('select(CommunicationId)', function (data) {
+            GetDevice();
+        });
+        form.on('select(DeviceId)', function (data) {
+            GetPara();
+        });
+           //给表单赋值
+        form.val("formTest", { //formTest 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+            "ModelTitle": "@Model.ModelTitle",
+            "SortCode": "@Model.SortCode",
+            "Remark": "@Model.Remark",
+            "ServerId": "@Model.ServerId",
+            "CommunicationId": "@Model.CommunicationId",
+            "DeviceId": "@Model.DeviceId",
+
+        });
+        function GetStations() {
+            $("#paraSet").empty();
+            $("#ServerId").empty();
+            $("#ServerId").append("<option value=''>请选择采集站</option>");
+            //加载采集站类型
+            $.get("/Scada/ScadaEquipment/GetStations", function (result) {
+
+                for (var i = 0; i < result.data.length; i++) {
+                    if (result.data[i].SERVER_ID == "@Model.ServerId") {
+                        $("#ServerId").append("<option selected='selected' value='" + result.data[i].SERVER_ID + "'>" + result.data[i].SERVER_ID + "</option>");
+                    }
+                    else {
+                        $("#ServerId").append("<option value='" + result.data[i].SERVER_ID + "'>" + result.data[i].SERVER_ID + "</option>");
+                    }
+
+                }
+
+                layui.form.render("select");
+                //重新渲染select
+                form.render('select');
+                GetCommunication();
+
+            });
+        }
+        function GetCommunication() {
+            $("#paraSet").empty();
+            $("#CommunicationId").empty();
+            $("#CommunicationId").append("<option value=''>请选择通道</option>");
+            //加载通道类型
+            $.get("/Scada/ScadaEquipment/GetCommunications", { "serverid": $("#ServerId").val() }, function (result) {
+
+
+                for (var i = 0; i < result.data.length; i++) {
+                    if (result.data[i].IO_COMM_ID == "@Model.CommunicationId") {
+                        $("#CommunicationId").append("<option selected='selected' value='" + result.data[i].IO_COMM_ID + "'>" + result.data[i].IO_COMM_LABEL + "[" + result.data[i].IO_COMM_LABEL + "]" + "</option>");
+                    }
+                    else {
+                        $("#CommunicationId").append("<option value='" + result.data[i].IO_COMM_ID + "'>" + result.data[i].IO_COMM_LABEL + "[" + result.data[i].IO_COMM_LABEL + "]" + "</option>");
+                    }
+
+                }
+
+                layui.form.render("select");
+                //重新渲染select
+                form.render('select');
+                GetDevice();
+
+            });
+        }
+        function GetDevice() {
+            $("#DeviceId").empty();
+            $("#paraSet").empty();
+            $("#DeviceId").append("<option value=''>请选择设备</option>");
+            //加载通道类型
+            $.get("/Scada/ScadaEquipment/GetDevices", { "serverid": $("#ServerId").val(), "communicationid": $("#CommunicationId").val() }, function (result) {
+
+
+                for (var i = 0; i < result.data.length; i++) {
+                    if (result.data[i].IO_DEVICE_ID == "@Model.DeviceId") {
+                        $("#DeviceId").append("<option selected='selected' value='" + result.data[i].IO_DEVICE_ID + "'>" + result.data[i].IO_DEVICE_NAME + "[" + result.data[i].IO_DEVICE_LABLE + "]" + "</option>");
+                    }
+                    else {
+                        $("#DeviceId").append("<option value='" + result.data[i].IO_DEVICE_ID + "'>" + result.data[i].IO_DEVICE_NAME + "[" + result.data[i].IO_DEVICE_LABLE + "]" + "</option>");
+                    }
+
+                }
+
+                layui.form.render("select");
+
+                //重新渲染select
+                form.render('select');
+                GetPara();
+            });
+        }
+        function GetPara() {
+            $("#paraSet").empty();
+            var str = "@Model.TransferParaValues";
+            var values = [];
+            if ("@Model.DeviceId" == $("#DeviceId").val()) {
+                for (var i = 0; i < str.split(",").length; i++) {
+                    values.push(str.split(",")[i]);
+                }
+            }
+           
+
+            //加载通道类型
+            $.get("/Scada/ScadaEquipment/GetParas", { "serverid": $("#ServerId").val(), "communicationid": $("#CommunicationId").val(), "deviceid": $("#DeviceId").val() }, function (result) {
+
+                    var paras = result.data;
+                    //初始右侧数据
+                    transfer.render({
+                    elem: '#ParaList'
+                            , data: paras
+                            , value: values
+                            , title: ['待选IO列表', '已选IO列表']  //自定义标题
+                    , id:"ParaList"
+                            , height: 300 //定义高度
+                    , showSearch: true
+                            , onchange: function (obj, index) {
+                                TransferParaChanged();
+
+                        }
+                    });
+                TransferParaChanged();
+                });
+        }
+        function TransferParaChanged() {
+
+            var paras = transfer.getData("ParaList");
+            var paraSetcontent = $("#paraSet");
+
+            paraSetcontent.empty();
+            var str = "";
+            for (var i = 0; i < paras.length; i++) {
+                if (selectpras.length <= 0) {
+
+                    str += " <input type='hidden' name='ParaName' value='" + paras[i].value + "' data-filter='ParaName'>";
+                    str += " <input type='hidden' name='ParaID' value='" + paras[i].id + "' data-filter='ParaID'>";
+                    str += "  <div class='layui-input-item'>";
+                    str += "     <label class='layui-form-label'>" + paras[i].title + "</label>"
+                    str += "  <div class='layui-input-inline'>";
+                    str += "   <input type='text' name='ParaTitle' placeholder='名称'  autocomplete='off' class='layui-input' lay-verify='required'  data-filter='ParaTitle'/>";
+                    str += "   </div>";
+                    str += "  <div class='layui-input-inline'>";
+
+                    str += "    <input type='text' name='ParaUnit' placeholder='工程单位' autocomplete='off' class='layui-input' lay-verify='required'  data-filter='ParaUnit'/>";
+                    str += "   </div>";
+                    str += "  <div class='layui-input-inline'>";
+
+                    str += "    <select name='SerieType'   id='SerieType" + i + "'  placeholder='请选择曲线类型'   data-filter='SerieType'     lay-filter='SerieType'  > <option value='0'>请选择曲线类型</option></select>";
+                    str += "   </div>";
+                    str += "  <div class='layui-input-inline'>";
+                    str += "   <select name='SerieName' id='SerieName" + i + "'  placeholder='请选择曲线模版'  data-filter='SerieName'   lay-filter='SerieName' >  <option value='0'>请选择曲线模版</option></select>";
+                    str += "   </div>";
+                    str += "  <div class='layui-input-inline'>";
+                    str += "   <select name='CanWrite' id='CanWrite" + i + "'  placeholder='是否可写入'  data-filter='CanWrite'   lay-filter='CanWrite' >  <option value='0'>可读</option><option value='1'>可写</option></select>";
+                    str += "   </div>";
+                    str += "   </div>";
+                }
+                else {
+                    var existPara=null;
+                    for (var o = 0; o < selectpras.length; o++) {
+                        if (selectpras[o].ParaName == paras[i].value && "@Model.DeviceId" == $("#DeviceId").val()) {
+
+                            existPara = selectpras[o];
+                            break;
+                        }
+                    }
+                    if (existPara != null) {
+
+                   
+                     
+                        str += " <input type='hidden' name='ParaName' value='" + existPara.ParaName + "' data-filter='ParaName'>";
+                        str += " <input type='hidden' name='ParaID' value='" + existPara.ParaId + "' data-filter='ParaID'>";
+                        str += "  <div class='layui-input-item'>";
+                        str += "     <label class='layui-form-label'>" + existPara.ParaName + "</label>"
+                        str += "  <div class='layui-input-inline'>";
+                        str += "   <input type='text' name='ParaTitle' placeholder='名称' value='" + existPara.ParaTitle+"'  autocomplete='off' class='layui-input' lay-verify='required'  data-filter='ParaTitle'/>";
+                        str += "   </div>";
+                        str += "  <div class='layui-input-inline'>";
+
+                        str += "    <input type='text' name='ParaUnit' placeholder='工程单位' value='" + existPara.ParaUnit +"'  autocomplete='off' class='layui-input' lay-verify='required'  data-filter='ParaUnit'/>";
+                        str += "   </div>";
+                        str += "  <div class='layui-input-inline'>";
+
+                        str += "    <select name='SerieType'   id='SerieType" + i + "'  placeholder='请选择曲线类型'   data-filter='SerieType'  data-selectvalue='" + existPara.SerieType+"'    lay-filter='SerieType'  > <option value='0'>请选择曲线类型</option></select>";
+                        str += "   </div>";
+                        str += "  <div class='layui-input-inline'>";
+                        str += "   <select name='SerieName' id='SerieName" + i + "'  placeholder='请选择曲线模版'  data-filter='SerieName'   data-selectvalue='" + existPara.SerieName +"'    lay-filter='SerieName' >  <option value='0'>请选择曲线模版</option></select>";
+                        str += "   </div>";
+                        str += "  <div class='layui-input-inline'>";
+                        if (existPara.CanWrite == 1) {
+                            str += "   <select name='CanWrite' id='CanWrite" + i + "'  placeholder='是否可写入'  data-filter='CanWrite'   lay-filter='CanWrite' >  <option value='0' >可读</option><option value='1' selected='selected'>可写</option></select>";
+
+                        }
+                        else {
+                            str += "   <select name='CanWrite' id='CanWrite" + i + "'  placeholder='是否可写入'  data-filter='CanWrite'   lay-filter='CanWrite' >  <option value='0' selected='selected'>可读</option><option value='1'>可写</option></select>";
+
+                        }
+                         str += "   </div>";
+                        str += "   </div>";
+                    }
+                    else {
+                        str += " <input type='hidden' name='ParaName' value='" + paras[i].value + "' data-filter='ParaName'>";
+                        str += " <input type='hidden' name='ParaID' value='" + paras[i].id + "' data-filter='ParaID'>";
+                        str += "  <div class='layui-input-item'>";
+                        str += "     <label class='layui-form-label'>" + paras[i].title + "</label>"
+                        str += "  <div class='layui-input-inline'>";
+                        str += "   <input type='text' name='ParaTitle' placeholder='名称'  autocomplete='off' class='layui-input' lay-verify='required'  data-filter='ParaTitle'/>";
+                        str += "   </div>";
+                        str += "  <div class='layui-input-inline'>";
+
+                        str += "    <input type='text' name='ParaUnit' placeholder='工程单位' autocomplete='off' class='layui-input' lay-verify='required'  data-filter='ParaUnit'/>";
+                        str += "   </div>";
+                        str += "  <div class='layui-input-inline'>";
+
+                        str += "    <select name='SerieType'   id='SerieType" + i + "'  placeholder='请选择曲线类型'   data-filter='SerieType'     lay-filter='SerieType'  > <option value='0'>请选择曲线类型</option></select>";
+                        str += "   </div>";
+                        str += "  <div class='layui-input-inline'>";
+                        str += "   <select name='SerieName' id='SerieName" + i + "'  placeholder='请选择曲线模版'  data-filter='SerieName'   lay-filter='SerieName' >  <option value='0'>请选择曲线模版</option></select>";
+                        str += "   </div>";
+                        str += "  <div class='layui-input-inline'>";
+                        str += "   <select name='CanWrite' id='CanWrite" + i + "'  placeholder='是否可写入'  data-filter='CanWrite'   lay-filter='CanWrite' >  <option value='0'>可读</option><option value='1'>可写</option></select>";
+                        str += "   </div>";
+                        str += "   </div>";
+                    }
+                }
+
+
+
+            }
+            paraSetcontent.html(str);
+            form.render();
+            GetSerieType();
+            form.on('select(SerieType)', function (data) {
+                var serieid = data.elem.id.replace("SerieType", "SerieName");
+                GetSerieStyle(data.elem.id, serieid);
+            });
+
+        }
+
+        function GetSerieType() {
+
+            //加载通道类型
+            $.get("/Scada/ScadaEquipment/GetSerieTypes", function (result) {
+
+                var selects = $("select[data-filter='SerieType']");
+
+                for (var s = 0; s < selects.length; s++) {
+                    var obj = $(selects[s]);
+                    var serietype = obj.data("selectvalue");
+                    $(selects[s]).empty();
+                    $(selects[s]).append("<option value=''>请选择曲线类型</option>");
+                    for (var i = 0; i < result.data.length; i++) {
+
+                        var sel = "";
+                        if (serietype != undefined && serietype != null && serietype == result.data[i].SerieClassify) {
+                            sel = " selected='selected'";
+
+
+                        }
+
+                        $(selects[s]).append("<option   " + sel + "  value='" + result.data[i].SerieClassify + "'>" + result.data[i].SerieClassify + "</option>");
+                        var serieid = obj[0].id.replace("SerieType", "SerieName");
+                        $(selects[s]).val(serietype);
+                       
+                    }
+                    GetSerieStyle(obj[0].id, serieid);
+                }
+
+
+                layui.form.render("select");
+
+                //重新渲染select
+                form.render('select');
+
+
+            });
+        }
+        function GetSerieStyle(serietype,selectobj) {
+
+            //加载通道类型
+            $.get("/Scada/ScadaEquipment/GetSerieStyles", { "SerieType": $("#" + serietype).val() }, function (result) {
+
+                var select = $("#" + selectobj);
+                var seriename = select.data("selectvalue");
+                select.empty();
+                select.append("<option value=''>请选择曲线模版</option>");
+                for (var i = 0; i < result.data.length; i++) {
+                    var sel = "";
+                    if (seriename != undefined && seriename != null && seriename == result.data[i].SerieName) {
+                        sel = " selected='selected'";
+                    }
+                    select.append("<option   " + sel + " value='" + result.data[i].SerieName + "'>" + result.data[i].SerieName + "[" + result.data[i].SerieTitle + "]" + "</option>");
+                }
+                layui.form.render("select");
+                //重新渲染select
+                form.render('select');
+
+            });
+        }
+    });
+</script>
+

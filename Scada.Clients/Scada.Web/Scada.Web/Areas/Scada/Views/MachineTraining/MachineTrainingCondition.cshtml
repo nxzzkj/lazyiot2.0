@@ -1,0 +1,110 @@
+﻿@model  ScadaWeb.Model.ScadaMachineTrainingModel
+@{
+    ViewBag.Title = "机器学习样本管理";
+    Layout = "~/Views/Shared/_LayoutList.cshtml";
+}
+
+ 
+<!--数据表格-->
+<table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+
+<script>
+
+    layui.use(["table", "form", "okLayer", "okUtils", "laydate"], function () {
+        let table = layui.table;
+        let form = layui.form;
+
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+        var $ = layui.$;
+        let AllTable = table.render({
+            elem: "#tableId",
+            url: "/Scada/MachineTraining/MachineTrainingConditionList/@Model.Id",
+            limit: 30,
+            limits: [10, 20, 30, 50, 60, 80, 100, 150, 200, 300],
+            width: document.body.clientWidth - 10,
+            height: 'full-40',
+            page: false,
+            loading: false,
+            toolbar: "#toolbarTpl",
+            id: 'MachineTraining',
+            toolbar: "#toolbarTpl",
+            jump: function (obj, first) {
+                if (!first) {
+                    layer.msg('第 ' + obj.curr + ' 页');
+                }
+            },
+
+            size: "sm",
+            cols: [[
+                { field: 'zizeng', width: 60, title: '序号', fixed: 'left', templet: '#zizeng' },
+                { field: "Id", title: "样本ID", width: 140, fixed: 'left' },
+                { field: "ConditionTitle", title: "样本名称", width: 100 },
+                { field: "StartDate", title: "开始时间", width: 100, templet: '<span>{{showDate(d.StartDate)}}<span>' },
+                { field: "EndDate", title: "结束时间", width: 100, templet: '<span>{{showDate(d.EndDate)}}<span>' },
+                { field: "MarkDate", title: "标注时间", width: 100, templet: '<span>{{showDate(d.MarkDate)}}<span>' },
+                { field: "CreateTime", title: "创建时间", width: 100, templet: '<span>{{showDate(d.CreateTime)}}<span>' },
+                { field: "DataLength", title: "数据长度", width: 100 },
+
+                { field: "", title: "操作", width: 400, templet: '#operationTpl' }
+            ]]
+
+        });
+        form.on("submit(search)", function (data) {
+
+            AllTable.reload({
+                where: data.field,
+                page: { curr: 1 }
+            });
+            return false;
+        });
+        table.on("tool(tableFilter)", function (obj) {
+            let data = obj.data;
+            switch (obj.event) {
+                case "TaskConditionEdit":
+                    TaskConditionEdit(data.Id);//field Id 和 数据库表字段 Id 要一致
+                    break;
+                case "TaskConditionDel":
+                    TaskConditionDel(data.Id);//field Id 和 数据库表字段 Id 要一致
+                    break;
+            }
+        });
+        $('#TaskConditionAdd').on('click', function () {
+            okLayer.open("添加样本", "/Scada/MachineTraining/MachineTrainingConditionEdit?taskid=@Model.Id&id=0", "100%", "100%", null, null);
+        });
+        function TaskConditionEdit(id)
+        {
+            okLayer.open("编辑样本", "/Scada/MachineTraining/MachineTrainingConditionEdit?taskid=@Model.Id&id="+id, "100%", "100%", null, null);
+        }
+         
+        function TaskConditionDel(id)
+        {
+            okLayer.confirm("确定要删除吗？", function () {
+                okUtils.ajax("/Scada/MachineTraining/MachineTrainingConditionDelete/" + id, "get", { id: id }, true).done(function (response) {
+                    okUtils.tableSuccessMsg(response.message);
+                    //没开启分页，没确定按钮，手动刷新
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1500);
+                }).fail(function (error) {
+                    console.log(error)
+                });
+            })
+        }
+
+
+    })
+</script>
+<script type="text/html" id="toolbarTpl">
+    <button class='layui-btn layui-btn-sm ' lay-event='TaskConditionAdd' id='TaskConditionAdd'><i class='ok-icon'></i>添加样本</button>
+</script>
+<!-- 行工具栏模板 -->
+<script type="text/html" id="operationTpl">
+    <a class='layui-btn layui-btn-xs' href='javascript:;' lay-event='TaskConditionEdit' id='TaskConditionEdit'><i class='ok-icon'></i>编辑数据</a>
+    <a class='layui-btn layui-btn-xs' href='javascript:;' lay-event='TaskConditionDel' id='TaskConditionDel'><i class='ok-icon'></i>删除样本</a>
+</script>
+<script type="text/html" id="zizeng">
+    {{d.LAY_TABLE_INDEX+1}}
+</script>
+
+

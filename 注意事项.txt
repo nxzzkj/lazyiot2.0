@@ -1,0 +1,17 @@
+1 一直提示错误 CefSharp-无法加载文件或程序集“ CefSharp.Core。runtime.dll”或其依赖项之一
+解决方案：请按照vc++运行库2015
+2 influxdb一直显示正在启动，说明配置文件中的存储路径没有D盘，用户可以自行修改存储路径
+3 首先启动IOCenter目录下的 ScadaCenterServer.exe 在进入后首先在“系统”-“采集站授权”
+中增加采集站。在输入中要求填写“采集站物理标识”，请选择IOStation目录下的IOManager，点击启动
+在登录界面上有个"采集站标识"文本框，将文本框内容复制到授权编辑器上的对应文本框，填写采集站所在的IP地址
+4 当设置完这些后，请重新启动电脑（由于采用了系统环境变量设置）
+5 发布IO工程 首先启动IOCenter/ScadaCenterServer.exe ,在启动IOStation/IOManager.exe.在工程管理器中打开对应的DEMO
+/采集站IO工程.station,提供会提示转换，转换后 修改MQTT通道的IP地址为本地的IP地址和端口号，然后发布工程
+6 安装VC++库，否则浏览器插件不能在流程设计器中运行
+7 运行IOStation/ScadaFlowDesign.exe 开始设计流程界面并发布。
+8 运行IOStation/IOMonitor.exe采集服务器
+9 如何开启MQTT模拟器和Modbus模拟器，请私信联系我，我会教大家怎么开启模拟器
+本次版本主要测试Modbus驱动是否正常，如果有需要请私信联系我联合测试。
+10 Web端部署请在IIS中部署目录下的IOWeb网站。具体操作有不会的可私信我
+11 Web端开发调试的时候iis express 无法调试64位web "它的某一个依赖项。试图加载格式不正确的程序",请在vs
+中 工具-选项-项目和解决方案-WEB项目 中选中“对网站和web项目使用64位”

@@ -1,0 +1,59 @@
+﻿<div class="modal   fade" role="dialog" id="dynamicselectModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3>文本属性编辑</h3>
+            </div>
+            <div class="modal-body">
+                <div role="form" class="form-horizontal col-md-12">
+                    <div class="form-group">
+                        <label for="elementName" class="col-sm-2 control-label">表单ID</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control" id="dynamicselect_ID"
+                                   placeholder="请输入唯一的表单ID(英文字符加数组)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">选择数据源</label>
+                        <div class="col-sm-10">
+                            <select type="text" class="form-control" id="dynamicselect_DataSource">
+                                <option value="">请选择数据源</option>
+                                @for (var i = 0; i < Model.DataSources.Count; i++)
+                                {
+                                    <option value="@Model.DataSources[i].Id">@Model.DataSources[i].DBTitle [@Model.DataSources[i].DBType]</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="elementName" class="col-sm-2 control-label">SQL语句配置</label>
+                        <div class="col-sm-10">
+                            <textarea rows="10" style="width:100%" placeholder="例如:    select r1,r2,r3,r4,r5 from table where 1=1" id="dynamicselect_Sql">
+                             
+                                    </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="elementName" class="col-sm-2 control-label">值字段</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="dynamicselect_Value"
+                                   placeholder="要显示的值字段">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="elementName" class="col-sm-2 control-label">文本字段</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="dynamicselect_Text"
+                                   placeholder="值显示的文本字段">
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="modal-footer"> <label style="color:red; font-size:14px;" id="dynamicSelect_info"><a id="dynamicselect_propertiessave" class="btn btn-primary">保存</a> <a class="btn" data-dismiss="modal">关闭</a> </div>
+        </div>
+    </div>
+</div>

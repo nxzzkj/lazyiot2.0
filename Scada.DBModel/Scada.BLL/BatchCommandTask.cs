@@ -1,0 +1,211 @@
+﻿using System;
+using System.Data;
+using System.Collections.Generic;
+using Scada.Model;
+using Scada.Common;
+using System.Collections.Concurrent;
+
+
+ 
+/*----------------------------------------------------------------
+// Copyright (C) 2017 宁夏众智科技有限公司 版权所有。 
+// 开源版本代码仅限个人技术研究使用，未经作者允许严禁商用。宁夏众智科技有限公司是一家油田自动化行业经营多年的软件开发公司，公司承接OA、工控、组态、微信小程序等开发。
+// 对于本系统的相关版权归属宁夏众智科技所有，如果本系统使用第三方开源模块，该模块版权归属原作者所有。
+// 请大家尊重作者的劳动成果，共同促进行业健康发展。
+// 相关技术交流群89226196 ,作者QQ:249250126 作者微信18695221159 邮箱:my820403@126.com
+// 创建者：马勇
+//----------------------------------------------------------------*/
+namespace Scada.Business
+{
+	/// <summary>
+	/// BatchCommandTask
+	/// </summary>
+	public partial class BatchCommandTaskModel
+	{
+		private readonly Scada.Database.BatchCommandTaskModel dal =new Scada.Database.BatchCommandTaskModel();
+		private readonly Scada.Database.BatchCommandTaskItemModel dalItem = new Scada.Database.BatchCommandTaskItemModel();
+		
+		public BatchCommandTaskModel()
+		{}
+		#region  BasicMethod
+		public bool Clear(string serverid)
+		{
+			bool res= dal.Clear(serverid);
+			if(res)
+            {
+				dalItem.Clear(serverid);
+
+			}
+			return res;
+		}
+		/// <summary>
+		/// 增加一条数据
+		/// </summary>
+		public bool Add(Scada.Model.BatchCommandTaskModel model)
+		{
+			return dal.Add(model);
+		}
+        public void Add(ConcurrentBag<Scada.Model.BatchCommandTaskModel> models)
+        {
+            if (models == null || models.Count <= 0)
+                return;
+            while (models.Count > 0)
+            {
+                Scada.Model.BatchCommandTaskModel conditionModel;
+                models.TryTake(out conditionModel);
+                if (conditionModel != null)
+                    if (dal.Add(conditionModel))
+                    {
+                        foreach (var item in conditionModel.Items)
+                        {
+                            item.SERVER_ID = conditionModel.SERVER_ID;
+                            item.CommandTaskID = conditionModel.Id;
+                            dalItem.Add(item);
+
+                        }
+                    }
+
+            };
+
+
+
+        }
+		public void Add(List<Scada.Model.BatchCommandTaskModel> models)
+		{
+			if (models == null || models.Count <= 0)
+				return;
+			models.ForEach(delegate (Scada.Model.BatchCommandTaskModel conditionModel) {
+
+
+				if(dal.Add(conditionModel)&& conditionModel.Items!=null)
+                {
+					dalItem.Add(conditionModel.Items);
+
+				}
+			});
+
+		}
+		/// <summary>
+		/// 更新一条数据
+		/// </summary>
+		public bool Update(Scada.Model.BatchCommandTaskModel model)
+		{
+			return dal.Update(model);
+		}
+
+		/// <summary>
+		/// 删除一条数据
+		/// </summary>
+		public bool Delete()
+		{
+			//该表无主键信息，请自定义主键/条件字段
+			return dal.Delete();
+		}
+
+		/// <summary>
+		/// 得到一个对象实体
+		/// </summary>
+		public Scada.Model.BatchCommandTaskModel GetModel()
+		{
+			//该表无主键信息，请自定义主键/条件字段
+			return dal.GetModel();
+		}
+
+		/// <summary>
+		/// 得到一个对象实体，从缓存中
+		/// </summary>
+		public Scada.Model.BatchCommandTaskModel GetModelByCache()
+		{
+			//该表无主键信息，请自定义主键/条件字段
+			string CacheKey = "BatchCommandTaskModel-" ;
+			object objModel = Scada.Common.DataCache.GetCache(CacheKey);
+			if (objModel == null)
+			{
+				try
+				{
+					objModel = dal.GetModel();
+					if (objModel != null)
+					{
+						int ModelCache = Scada.Common.ConfigHelper.GetConfigInt("ModelCache");
+						Scada.Common.DataCache.SetCache(CacheKey, objModel, DateTime.Now.AddMinutes(ModelCache), TimeSpan.Zero);
+					}
+				}
+				catch{}
+			}
+			return (Scada.Model.BatchCommandTaskModel)objModel;
+		}
+
+		/// <summary>
+		/// 获得数据列表
+		/// </summary>
+		public DataSet GetList(string strWhere)
+		{
+			return dal.GetList(strWhere);
+		}
+		/// <summary>
+		/// 获得数据列表
+		/// </summary>
+		public List<Scada.Model.BatchCommandTaskModel> GetModelList(string strWhere)
+		{
+			DataSet ds = dal.GetList(strWhere);
+			return DataTableToList(ds.Tables[0]);
+		}
+		/// <summary>
+		/// 获得数据列表
+		/// </summary>
+		public List<Scada.Model.BatchCommandTaskModel> DataTableToList(DataTable dt)
+		{
+			List<Scada.Model.BatchCommandTaskModel> modelList = new List<Scada.Model.BatchCommandTaskModel>();
+			int rowsCount = dt.Rows.Count;
+			if (rowsCount > 0)
+			{
+				Scada.Model.BatchCommandTaskModel model;
+				for (int n = 0; n < rowsCount; n++)
+				{
+					model = dal.DataRowToModel(dt.Rows[n]);
+					if (model != null)
+					{
+						modelList.Add(model);
+					}
+				}
+			}
+			return modelList;
+		}
+
+		/// <summary>
+		/// 获得数据列表
+		/// </summary>
+		public DataSet GetAllList()
+		{
+			return GetList("");
+		}
+
+		/// <summary>
+		/// 分页获取数据列表
+		/// </summary>
+		public int GetRecordCount(string strWhere)
+		{
+			return dal.GetRecordCount(strWhere);
+		}
+		/// <summary>
+		/// 分页获取数据列表
+		/// </summary>
+		public DataSet GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
+		{
+			return dal.GetListByPage( strWhere,  orderby,  startIndex,  endIndex);
+		}
+		/// <summary>
+		/// 分页获取数据列表
+		/// </summary>
+		//public DataSet GetList(int PageSize,int PageIndex,string strWhere)
+		//{
+			//return dal.GetList(PageSize,PageIndex,strWhere);
+		//}
+
+		#endregion  BasicMethod
+		#region  ExtensionMethod
+
+		#endregion  ExtensionMethod
+	}
+}
+

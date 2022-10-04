@@ -1,0 +1,267 @@
+﻿@model ScadaWeb.Model.ScadaMachineTrainingModel
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+    string[] cols = Model.Detection.Split(',');
+}
+
+<form class="layui-form layui-form-pane ok-form" lay-filter="formEdit">
+    <input id="SERVER_ID" name="SERVER_ID" type="hidden" class="layui-input" value="@Model.SERVER_ID" lay-filter>
+    <input id="SERVER_NAME" name="SERVER_NAME" type="hidden" class="layui-input" value="@Model.SERVER_NAME" lay-filter>
+    <input id="COMM_ID" name="COMM_ID" type="hidden" class="layui-input" value="@Model.COMM_ID" lay-filter>
+    <input id="DEVICE_ID" name="DEVICE_ID" type="hidden" class="layui-input" value="@Model.DEVICE_ID" lay-filter>
+    <input id="Algorithm" name="Algorithm" type="hidden" class="layui-input" value="@Model.Algorithm" lay-filter>
+    <input id="Properties" name="Properties" type="hidden" class="layui-input" value="@Model.Properties" lay-filter>
+
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.CreateTime)
+    @Html.HiddenFor(x => x.UpdateTime)
+    @Html.HiddenFor(x => x.CreateUserId)
+    @Html.HiddenFor(x => x.UpdateUserId)
+    @Html.HiddenFor(x => x.Detection)
+    <div class="layui-form-item">
+        <label class="layui-form-label">任务名称</label>
+        <div class="layui-input-block">
+            <input type="text" id="TaskName" name="TaskName" placeholder="任务名称" value="@Model.TaskName" autocomplete="off" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">算法</label>
+        <div class="layui-input-block">
+            <div id="AlgorithmList" style="width:100%;"></div>
+
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">训练周期(分钟/次)</label>
+        <div class="layui-input-block">
+            <input type="text" id="TrainingCycle" name="TrainingCycle" placeholder="模型训练周期" autocomplete="off" class="layui-input" value="@Model.TrainingCycle" lay-verify="number">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">预测周期(分钟/次)</label>
+        <div class="layui-input-block">
+            <input type="text" id="ForecastPriod" name="ForecastPriod" placeholder="模型预测周期" autocomplete="off" class="layui-input" value="@Model.ForecastPriod" lay-verify="number">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">True(是)文本</label>
+        <div class="layui-input-block">
+            <input type="text" id="TrueText" name="TrueText" placeholder="请输入文本内容" autocomplete="off" class="layui-input" value="@Model.TrueText"  required>
+        </div>
+        <label class="layui-form-label">False(是)文本</label>
+        <div class="layui-input-block">
+            <input type="text" id="FalseText" name="FalseText" placeholder="请输入文本内容" autocomplete="off" class="layui-input" value="@Model.FalseText"  required>
+        </div>
+    </div>
+ 
+    <div class="layui-form-item">
+        <label class="layui-form-label">异常值<0.5</label>
+        <div class="layui-input-block">
+            <input type="text" id="Detection5" name="Detection5" placeholder="请输入文本内容" autocomplete="off" class="layui-input" value="@Model.Detection5" required>
+        </div>
+        <label class="layui-form-label">异常值0.5~0.6</label>
+        <div class="layui-input-block">
+            <input type="text" id="Detection6" name="Detection6" placeholder="请输入文本内容" autocomplete="off" class="layui-input" value="@Model.Detection6"  required>
+        </div>
+        <label class="layui-form-label">异常值0.6~0.7</label>
+        <div class="layui-input-block">
+            <input type="text" id="Detection7" name="Detection7" placeholder="请输入文本内容" autocomplete="off" class="layui-input" value="@Model.Detection7"  required>
+        </div>
+        <label class="layui-form-label">异常值0.7~0.8</label>
+        <div class="layui-input-block">
+            <input type="text" id="Detection8" name="Detection8" placeholder="请输入文本内容" autocomplete="off" class="layui-input" value="@Model.Detection8" required>
+        </div>
+        <label class="layui-form-label">异常值0.8~0.9</label>
+        <div class="layui-input-block">
+            <input type="text" id="Detection9" name="Detection9" placeholder="请输入文本内容" autocomplete="off" class="layui-input" value="@Model.Detection9" required>
+        </div>
+        <label class="layui-form-label">异常值0.9~1</label>
+        <div class="layui-input-block">
+            <input type="text" id="Detection10" name="Detection10" placeholder="请输入文本内容" autocomplete="off" class="layui-input" value="@Model.Detection10" required>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">属性</label>
+        <div class="layui-input-inline">
+            <div id="ServerList" style="width:200px;"></div>
+        </div>
+        <div class="layui-input-inline">
+            <div id="CommunicationList" style="width:200px;"></div>
+        </div>
+        <div class="layui-input-inline">
+            <div id="DeviceList" style="width:200px;"></div>
+        </div>
+        <div class="layui-input-inline">
+            <div id="ParaList" style="width:300px;"></div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">模型计算参数</label>
+        <div class="layui-input-block">
+            <input type="text" multiple id="Remark" readonly name="Remark" placeholder="请输入备注" autocomplete="off" class="layui-input" value="@Model.Remark">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script>
+    layui.config({ base: '/Content/lib/tablePlug/' }).use(["table", "form", "okLayer", "okUtils", "treeSelect", 'tablePlug', "laydate"], function () {
+        let treeSelect = layui.treeSelect;
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+        FillServer();
+        FillAlgorithm();
+
+
+        function FillAlgorithm() {
+            $.get("/Scada/MachineTraining/GetAlgorithm", function (result) {
+
+                var algorithm = xmSelect.render({
+                    el: '#AlgorithmList',
+                    filterable: true,
+                    paging: true,
+                    pageSize: 50,
+                    data: result,
+                    radio: true,
+                    on: function (data) {
+                        var arr = data.change[0].id;
+
+                        $("#Algorithm").val(arr);
+
+                    },
+                });
+                algorithm.setValue([
+                    { name: '@Model.Algorithm', value: '@Model.Algorithm' },
+                ])
+
+            });
+        }
+        function FillServer() {
+            $.get("/Scada/MachineTraining/GetIOServer", function (result) {
+
+                var servers = xmSelect.render({
+                    el: '#ServerList',
+                    filterable: true,
+                    paging: true,
+                    pageSize: 50,
+                    radio: true,
+                    data: result,
+                    on: function (data) {
+                        var arr = data.change[0].id;
+                        var sid = data.change[0].value;
+                        $("#SERVER_ID").val(sid);
+                        FillCommunication(sid);
+                        FillDevice("", "");
+                        FillPara("", "", "");
+                        $("#COMM_ID").val("");
+                        $("#DEVICE_ID").val("");
+                        $("#Properties").val("");
+                    },
+                });
+
+                servers.setValue([
+                     '@Model.SERVER_ID'
+                ])
+                FillCommunication('@Model.SERVER_ID');
+                FillDevice('@Model.SERVER_ID', '@Model.COMM_ID');
+                FillPara('@Model.SERVER_ID', '@Model.COMM_ID', '@Model.DEVICE_ID');
+            });
+        }
+        function FillCommunication(serverid) {
+            $.get("/Scada/MachineTraining/GetIOCommunication?server=" + serverid, function (result) {
+
+                var communications = xmSelect.render({
+                    el: '#CommunicationList',
+                    filterable: true,
+                    paging: true,
+                    pageSize: 50,
+                    radio: true,
+                    data: result,
+                    on: function (data) {
+                        var cid = data.change[0].id;
+                        var sid = data.change[0].value1;
+
+
+                        $("#COMM_ID").val(cid);
+                        $("#SERVER_ID").val(sid);
+                        FillDevice(sid, cid);
+
+                        FillPara("", "", "");
+                        $("#DEVICE_ID").val("");
+                        $("#Properties").val("");
+                    },
+                });
+                communications.setValue([
+                    '@Model.COMM_ID' 
+                ]);
+
+            });
+        }
+        function FillDevice(serverid, communicationid) {
+            $.get("/Scada/MachineTraining/GetIODevice?server=" + serverid + "&communication=" + communicationid, function (result) {
+
+                var devices = xmSelect.render({
+                    el: '#DeviceList',
+                    filterable: true,
+                    paging: true,
+                    pageSize: 50,
+                    radio: true,
+                    data: result,
+                    on: function (data) {
+                        var arr = data.change[0].id;
+                        var did = data.change[0].value;
+                        var sid = data.change[0].value1;
+                        var cid = data.change[0].value2;
+                        $("#DEVICE_ID").val(did);
+                        $("#COMM_ID").val(cid);
+                        $("#SERVER_ID").val(sid);
+                        FillPara(sid, cid, did);
+                        $("#Properties").val("");
+                    },
+                });
+                devices.setValue([
+                    '@Model.DEVICE_ID' 
+                ]);
+            });
+        }
+        function FillPara(serverid, communicationid, deviceid) {
+            $.get("/Scada/MachineTraining/GetIOPara?server=" + serverid + "&communication=" + communicationid + "&device=" + deviceid, function (result) {
+
+                var paras = xmSelect.render({
+                    el: '#ParaList',
+                    filterable: true,
+                    paging: true,
+                    pageSize: 50,
+                    data: result,
+                    radio: false,
+                    on: function (data) {
+                        $("#Properties").val(paras.getValue('valueStr'));
+                    },
+                });
+                var parray = $("#Properties").val().split(',');
+                paras.setValue(parray);
+
+
+            });
+        }
+        form.on("submit(add)", function (data) {
+            okUtils.ajax("/Scada/MachineTraining/MachineTrainingSave", "post", data.field, true).done(function (response) {
+                okLayer.greenTickMsg(response.message, function () {
+                    parent.location.reload(); // 父页面刷新
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));//先得到当前iframe层的索引 再执行关闭
+                });
+            }).fail(function (error) {
+                console.log(error)
+            });
+            return false;
+        });
+    });
+</script>
+

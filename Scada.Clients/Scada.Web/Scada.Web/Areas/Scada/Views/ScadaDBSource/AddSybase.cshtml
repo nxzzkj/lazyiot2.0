@@ -1,0 +1,77 @@
+﻿@model ScadaWeb.Web.Areas.Scada.Models.SybaseModel
+
+@{ ViewBag.Title = "添加Sybase数据源";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml"; }
+
+<form class="layui-form layui-form-pane ok-form" lay-filter="formTest">
+    <input type="hidden" name="Id" value="@Model.Id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">数据源链接名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="DBTitle" placeholder="DBTitle" autocomplete="off" class="layui-input" lay-verify="required"  value="@Model.DBTitle"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">服务器IP</label>
+        <div class="layui-input-block">
+            <input type="text" name="Server" placeholder="Server" autocomplete="off" class="layui-input" lay-verify="required"  value="@Model.Server"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">数据库名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="Database" placeholder="Database" autocomplete="off" class="layui-input" lay-verify="required"  value="@Model.Database"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户</label>
+        <div class="layui-input-block">
+            <input type="text" name="UserId" placeholder="UserId" autocomplete="off" class="layui-input" lay-verify="required"  value="@Model.UserId"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-block">
+            <input type="text" name="Password" placeholder="Password" autocomplete="off" class="layui-input" lay-verify="required"  value="@Model.Password"/>
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(["form", "okLayer", "okUtils"], function () {
+
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+
+
+        form.on("submit(add)", function (data) {
+
+
+
+
+            okUtils.ajax("/Scada/ScadaDBSource/AddSybase", "post", data.field, true).done(function (response) {
+                okLayer.greenTickMsg(response.message, function () {
+                    parent.location.reload(); // 父页面刷新
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));//先得到当前iframe层的索引 再执行关闭
+                });
+            }).fail(function (error) {
+                console.log(error)
+            });
+            return false;
+        });
+
+    });
+</script>
+

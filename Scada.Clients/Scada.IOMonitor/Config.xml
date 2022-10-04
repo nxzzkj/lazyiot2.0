@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<IOServer>
+  <RemoteIP>
+    192.168.2.7
+  </RemoteIP>
+  <User>
+    admin
+  </User>
+  <Password>
+    123456
+  </Password>
+  <Project>
+  </Project>
+	<CacheInterval>
+		100
+	</CacheInterval>
+	<CacheMaxNumber>
+		3000
+	</CacheMaxNumber>
+		<SendBlockTime>
+		500
+	</SendBlockTime>
+		<DataMessageTimeout>
+		10000
+	</DataMessageTimeout>
+		
+	<AutoLogin>
+		0
+	</AutoLogin>
+	<SaveLogger>
+		1
+	</SaveLogger>
+	<TaskMaxNumber>
+		10
+	</TaskMaxNumber>
+</IOServer>

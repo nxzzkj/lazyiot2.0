@@ -1,0 +1,1388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\CefSharp.Common.97.1.60\build\CefSharp.Common.props" Condition="Exists('..\..\packages\CefSharp.Common.97.1.60\build\CefSharp.Common.props')" />
+  <Import Project="..\..\packages\cef.redist.x86.97.1.6\build\cef.redist.x86.props" Condition="Exists('..\..\packages\cef.redist.x86.97.1.6\build\cef.redist.x86.props')" />
+  <Import Project="..\..\packages\cef.redist.x64.97.1.6\build\cef.redist.x64.props" Condition="Exists('..\..\packages\cef.redist.x64.97.1.6\build\cef.redist.x64.props')" />
+  <Import Project="..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{40CC940B-59F9-41B2-BDD3-45A84D6B2CFE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ScadaCenterServer</RootNamespace>
+    <AssemblyName>ScadaCenterServer</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>E:\SCADA\CenterOS\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Publish\IOCenter\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Publish\IOCenter\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>w28.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>1AFE3D01F7F0C81315DA9311EC4BE1D5F4386E80</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ScadaCenterServer_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CefSharp, Version=97.1.60.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CefSharp.Common.97.1.60\lib\net452\CefSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="CefSharp.Core, Version=97.1.60.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CefSharp.Common.97.1.60\lib\net452\CefSharp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CefSharp.WinForms, Version=97.1.60.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CefSharp.WinForms.97.1.60\lib\net462\CefSharp.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\..\Lib\net45\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>..\..\Lib\net45\FluentAssertions.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\Lib\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture">
+      <HintPath>..\..\Lib\Ploeh.AutoFixture.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\Lib\x64\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\BatchCommandItemTaskNode.cs" />
+    <Compile Include="Controls\BatchCommandTreeNode.cs" />
+    <Compile Include="Controls\HistoryBatchCommandSearch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HistoryBatchCommandSearch.Designer.cs">
+      <DependentUpon>HistoryBatchCommandSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HistoryMachineTrainSearch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HistoryMachineTrainSearch.Designer.cs">
+      <DependentUpon>HistoryMachineTrainSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HistoryEventSearch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HistoryEventSearch.Designer.cs">
+      <DependentUpon>HistoryEventSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HistoryStaticsSearch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HistoryStaticsSearch.Designer.cs">
+      <DependentUpon>HistoryStaticsSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\INode.cs" />
+    <Compile Include="Controls\IOTree.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\HistoryAlarmSearch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HistoryAlarmSearch.Designer.cs">
+      <DependentUpon>HistoryAlarmSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MachineTrainTreeNode.cs" />
+    <Compile Include="Controls\TaskServerNode.cs" />
+    <Compile Include="Core\IISExpressManager.cs" />
+    <Compile Include="Core\IOCenterBatchCommandTaskManager.cs" />
+    <Compile Include="Core\IOCenterInfluxdbBackupManager.cs" />
+    <Compile Include="Core\IOCenterIOProjectManager.cs" />
+    <Compile Include="Core\IOCenterManager.cs" />
+    <Compile Include="Core\IOCenterMonitor.cs" />
+    <Compile Include="Core\IOCenterClient.cs" />
+    <Compile Include="Core\IOCenterToWeb.cs" />
+    <Compile Include="Core\MDSReceiveLargePackObject.cs" />
+    <Compile Include="Core\IOCenterCacheManager.cs" />
+    <Compile Include="Dialogs\AddIOMonitorClient.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\AddIOMonitorClient.Designer.cs">
+      <DependentUpon>AddIOMonitorClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\PopBaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\PopBaseForm.Designer.cs">
+      <DependentUpon>PopBaseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SendCommandForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\SendCommandForm.Designer.cs">
+      <DependentUpon>SendCommandForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IOCenterLoading.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IOCenterLoading.Designer.cs">
+      <DependentUpon>IOCenterLoading.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\IOTaskForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\IOTaskForm.Designer.cs">
+      <DependentUpon>IOTaskForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MonitorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\MonitorForm.Designer.cs">
+      <DependentUpon>MonitorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HsComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\HsComboBox.designer.cs">
+      <DependentUpon>HsComboBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\InfluxConfigBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\IOParaSeries.cs" />
+    <Compile Include="Controls\IORealListViewItem.cs" />
+    <Compile Include="Controls\IoTreeNode.cs" />
+    <Compile Include="Controls\Search.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Search.Designer.cs">
+      <DependentUpon>Search.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\IOCenterUIManager.cs" />
+    <Compile Include="Core\IOCenterQueryWorkType.cs" />
+    <Compile Include="Core\IOCenterSimulatorManager.cs" />
+    <Compile Include="Pages\DockForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\DockForm.Designer.cs">
+      <DependentUpon>DockForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CenterServerConfig.cs" />
+    <Compile Include="IOCenterMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IOCenterMainForm.Designer.cs">
+      <DependentUpon>IOCenterMainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mediator.cs" />
+    <Compile Include="Pages\AlarmConfigQueryWorkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\AlarmConfigQueryWorkForm.Designer.cs">
+      <DependentUpon>AlarmConfigQueryWorkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ScadaMachineTrainForeastQueryWorkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\ScadaMachineTrainForeastQueryWorkForm.Designer.cs">
+      <DependentUpon>ScadaMachineTrainForeastQueryWorkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ScadaBatchCommandTaskForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\ScadaBatchCommandTaskForm.Designer.cs">
+      <DependentUpon>ScadaBatchCommandTaskForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ScadaMachineTrainQueryWorkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\ScadaMachineTrainQueryWorkForm.Designer.cs">
+      <DependentUpon>ScadaMachineTrainQueryWorkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ScadaEventQueryWorkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\ScadaEventQueryWorkForm.Designer.cs">
+      <DependentUpon>ScadaEventQueryWorkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HistoryStaticsQueryWorkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\HistoryStaticsQueryWorkForm.Designer.cs">
+      <DependentUpon>HistoryStaticsQueryWorkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\InfluxDBBackupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\InfluxDBBackupForm.Designer.cs">
+      <DependentUpon>InfluxDBBackupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\IOServerAdminForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\IOServerAdminForm.Designer.cs">
+      <DependentUpon>IOServerAdminForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ScadaMDSManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\ScadaMDSManagerForm.Designer.cs">
+      <DependentUpon>ScadaMDSManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SendCommandQueryWorkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\SendCommandQueryWorkForm.Designer.cs">
+      <DependentUpon>SendCommandQueryWorkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HistoryAlarmQueryWorkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\HistoryAlarmQueryWorkForm.Designer.cs">
+      <DependentUpon>HistoryAlarmQueryWorkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HistoryQueryWorkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\HistoryQueryWorkForm.Designer.cs">
+      <DependentUpon>HistoryQueryWorkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\InfluxConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\InfluxConfigForm.Designer.cs">
+      <DependentUpon>InfluxConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\IOPropeitesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\IOPropeitesForm.Designer.cs">
+      <DependentUpon>IOPropeitesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\IOTreeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\IOTreeForm.Designer.cs">
+      <DependentUpon>IOTreeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\OperatorLogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\OperatorLogForm.Designer.cs">
+      <DependentUpon>OperatorLogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\RealQueryWorkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\RealQueryWorkForm.Designer.cs">
+      <DependentUpon>RealQueryWorkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SeriesWorkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\SeriesWorkForm.Designer.cs">
+      <DependentUpon>SeriesWorkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SimulatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\SimulatorForm.Designer.cs">
+      <DependentUpon>SimulatorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UserAccountForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\UserAccountForm.Designer.cs">
+      <DependentUpon>UserAccountForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TabFactory.cs" />
+    <Compile Include="Core\TaskHelper.cs" />
+    <Compile Include="WebAppForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WebAppForm.Designer.cs">
+      <DependentUpon>WebAppForm.cs</DependentUpon>
+    </Compile>
+    <Content Include="IISExpress\AppServer\empty_wwwroot\TextFile1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\nativrd2.dll" />
+    <Content Include="IISExpress\rsca2.dll" />
+    <EmbeddedResource Include="Controls\HistoryBatchCommandSearch.resx">
+      <DependentUpon>HistoryBatchCommandSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HistoryMachineTrainSearch.resx">
+      <DependentUpon>HistoryMachineTrainSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HistoryEventSearch.resx">
+      <DependentUpon>HistoryEventSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HistoryStaticsSearch.resx">
+      <DependentUpon>HistoryStaticsSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HistoryAlarmSearch.resx">
+      <DependentUpon>HistoryAlarmSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\AddIOMonitorClient.resx">
+      <DependentUpon>AddIOMonitorClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\SendCommandForm.resx">
+      <DependentUpon>SendCommandForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IOCenterLoading.resx">
+      <DependentUpon>IOCenterLoading.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\IOTaskForm.resx">
+      <DependentUpon>IOTaskForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\MonitorForm.resx">
+      <DependentUpon>MonitorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HsComboBox.resx">
+      <DependentUpon>HsComboBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\InfluxConfigBox.resx">
+      <DependentUpon>InfluxConfigBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Search.resx">
+      <DependentUpon>Search.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IOCenterMainForm.resx">
+      <DependentUpon>IOCenterMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\DockForm.resx">
+      <DependentUpon>DockForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\AlarmConfigQueryWorkForm.resx">
+      <DependentUpon>AlarmConfigQueryWorkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ScadaMachineTrainForeastQueryWorkForm.resx">
+      <DependentUpon>ScadaMachineTrainForeastQueryWorkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ScadaBatchCommandTaskForm.resx">
+      <DependentUpon>ScadaBatchCommandTaskForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ScadaMachineTrainQueryWorkForm.resx">
+      <DependentUpon>ScadaMachineTrainQueryWorkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ScadaEventQueryWorkForm.resx">
+      <DependentUpon>ScadaEventQueryWorkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\HistoryStaticsQueryWorkForm.resx">
+      <DependentUpon>HistoryStaticsQueryWorkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\InfluxDBBackupForm.resx">
+      <DependentUpon>InfluxDBBackupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\IOServerAdminForm.resx">
+      <DependentUpon>IOServerAdminForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ScadaMDSManagerForm.resx">
+      <DependentUpon>ScadaMDSManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\SendCommandQueryWorkForm.resx">
+      <DependentUpon>SendCommandQueryWorkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\HistoryAlarmQueryWorkForm.resx">
+      <DependentUpon>HistoryAlarmQueryWorkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\HistoryQueryWorkForm.resx">
+      <DependentUpon>HistoryQueryWorkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\InfluxConfigForm.resx">
+      <DependentUpon>InfluxConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\IOPropeitesForm.resx">
+      <DependentUpon>IOPropeitesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\IOTreeForm.resx">
+      <DependentUpon>IOTreeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\OperatorLogForm.resx">
+      <DependentUpon>OperatorLogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\RealQueryWorkForm.resx">
+      <DependentUpon>RealQueryWorkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\SeriesWorkForm.resx">
+      <DependentUpon>SeriesWorkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\SimulatorForm.resx">
+      <DependentUpon>SimulatorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\UserAccountForm.resx">
+      <DependentUpon>UserAccountForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="WebAppForm.resx">
+      <DependentUpon>WebAppForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="IISExpress\AppServer\applicationhost.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\asptlb.tlb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\browscap.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="IISExpress\config\administration.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\applicationhost.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\aspnet.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\redirection.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="IISExpress\config\templates\PersonalWebServer\applicationhost.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\config\templates\PersonalWebServer\aspnet.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\config\templates\PersonalWebServer\redirection.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\cs-CZ\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\cs-CZ\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\cs-CZ\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\cs-CZ\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\de-DE\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\de-DE\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\de-DE\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\de-DE\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\en-us\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\en-us\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\en-us\iisexpress.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\en-us\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\en-us\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\es-ES\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\es-ES\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\es-ES\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\es-ES\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\fr-FR\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\fr-FR\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\fr-FR\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\fr-FR\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\IisExpressAdminCmd.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\iisexpressshim.sdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\iisexpresstray.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\it-IT\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\it-IT\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\it-IT\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\it-IT\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ja-JP\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ja-JP\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ja-JP\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ja-JP\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ko-KR\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ko-KR\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ko-KR\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ko-KR\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\license.rtf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\pl-PL\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\pl-PL\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\pl-PL\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\pl-PL\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\pt-BR\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\pt-BR\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\pt-BR\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\pt-BR\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\Release_Notes.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ru-RU\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ru-RU\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ru-RU\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\ru-RU\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\tr-TR\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\tr-TR\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\tr-TR\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\tr-TR\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\zh-CN\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\zh-CN\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\zh-CN\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\zh-CN\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\zh-TW\appcmd.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\zh-TW\appobj.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\zh-TW\iisexpresstray.exe.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IISExpress\zh-TW\iisres.dll.mui">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="influxdb\influxdb.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="influxdb\influxdbstart.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IOProject\IOCenterServer.station">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Content Include="IISExpress\appcmd.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\appcmd.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\appobj.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\asp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\Asp.Net Core Module\V2\16.0.21322\aspnetcorev2_outofprocess.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\Asp.Net Core Module\V2\aspnetcorev2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\aspnetcore.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\authanon.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\authbas.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\authcert.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\authmap.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\authsspi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\browscap.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\cachtokn.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\cachuri.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\cgi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\compdyn.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\compstat.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\schema\aspnetcore_schema.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\schema\aspnetcore_schema_v2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\schema\ASPNET_schema.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\schema\dbmanager_schema.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\schema\FX_schema.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\schema\IIS_schema.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\schema\rewrite_schema.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\schema\rscaext.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\config\schema\WebDAV_schema.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\cs\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\cs\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\401-1.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\401-2.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\401-3.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\401-4.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\401-5.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\401.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-1.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-10.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-11.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-12.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-13.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-14.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-15.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-16.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-17.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-18.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-19.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-2.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-3.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-4.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-5.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-6.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-7.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-8.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403-9.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\403.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-1.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-10.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-11.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-12.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-13.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-14.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-15.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-2.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-3.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-4.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-5.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-6.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-7.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-8.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404-9.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\404.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\405.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\406.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\412.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\500-13.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\500-14.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\500-15.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\500-16.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\500-17.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\500-18.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\500-19.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\500.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\custerr\en-us\501.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\defdoc.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\de\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\de\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\diprestr.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\dirlist.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\es\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\es\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\filter.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\fr\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\fr\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\gzip.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\hwebcore.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iiscore.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisexpress.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\IisExpressAdminCmd.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisexpresshelper.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisexpresstray.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisexpresstray.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisfcgi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisfreb.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisreqs.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisres.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisRtl.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisutil2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iisvermg.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iiswsock.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iis_ssi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\iprestr.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\isapi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\it\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\it\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\ja\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\ja\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\ko\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\ko\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\logcust.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\loghttp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\Microsoft.Diagnostics.Tracing.EventSource.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\Microsoft.VisualStudio.RemoteControl.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\Microsoft.VisualStudio.Telemetry.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\Microsoft.VisualStudio.Utilities.Internal.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\Microsoft.Web.Tasks.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\modrqflt.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\Newtonsoft.Json.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\pl\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\pl\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\protsup.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\pt\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\pt\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\redirect.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\REDIST.TXT">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\rewrite.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\rscaext.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\rtinfo.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\ru\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\ru\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\static.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\ThirdPartyNotices.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\tr\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\tr\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\UpgradeApplicationHost.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\urlauthz.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\validcfg.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\w3dt.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\w3tp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\w3wphost.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\warmup.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\wbhst_pm.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\WCF35Setup.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\webdav.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\webdav_simple_lock.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\webdav_simple_prop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\webmatrixsup.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\zh-Hans\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\zh-Hans\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\zh-Hant\IisExpressadminCmd.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IISExpress\zh-Hant\iisexpresstray.resources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MachineTrainingData\211103165545\Train_20211103202649561443.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MachineTrainingData\211103165545\Train_20211103223545500036.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MachineTrainingData\211103233530\Train_20211103233639935454.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MDSConfig.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MDSSettings.design.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MDSSettings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqliteDB\MDS.s3db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Scada.Base\Scada.Common\Scada.Common.csproj">
+      <Project>{e3d8759a-c5eb-402d-9f10-f5c6029a8d1a}</Project>
+      <Name>Scada.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Base\Scada.DBUtility\Scada.DBUtility.csproj">
+      <Project>{0988c62e-247f-471f-a183-db509c7a3839}</Project>
+      <Name>Scada.DBUtility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Components\Scada.Logger\Scada.Logger.csproj">
+      <Project>{faca4c7e-b4c3-4738-b981-7a1b3d4d1d0a}</Project>
+      <Name>Scada.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Components\Scada.BatchCommand\Scada.BatchCommand.csproj">
+      <Project>{0144DA3E-D2B4-4477-A559-87A7EC24D189}</Project>
+      <Name>Scada.BatchCommand</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Components\Scada.MachineTraining\Scada.MachineTraining.csproj">
+      <Project>{6e1424af-9140-4d3b-91b7-3a25b42d70e2}</Project>
+      <Name>Scada.MachineTraining</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Components\Scada.MDSCommonLib\Scada.MDSCommonLib.csproj">
+      <Project>{110803a6-17d6-4068-a164-e0b66dbdb848}</Project>
+      <Name>Scada.MDSCommonLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Components\Scada.MDSCore\Scada.MDSCore.csproj">
+      <Project>{5f17d8e4-6382-490a-8671-cd0d26b91654}</Project>
+      <Name>Scada.MDSCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Components\Scada.TriggerAlarm\Scada.TriggerAlarm.csproj">
+      <Project>{161ec259-4428-4547-878a-6d1edf861d46}</Project>
+      <Name>Scada.TriggerAlarm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Components\Scada.Controls\Scada.Controls.csproj">
+      <Project>{af32e163-c577-4cbc-a072-0dc1ce0e1da3}</Project>
+      <Name>Scada.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Kernel\Scada.IOStructure\Scada.IOStructure.csproj">
+      <Project>{ea7a9840-d2f5-44e3-a7f4-07430a305d34}</Project>
+      <Name>Scada.IOStructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Temporal\InfluxData.Net.Common\Temporal.Net.Common.csproj">
+      <Project>{977da0f2-0330-44b2-8118-40de63909d7b}</Project>
+      <Name>Temporal.Net.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Temporal\InfluxData.Net.InfluxDb\Temporal.Net.InfluxDb.csproj">
+      <Project>{411eb16c-eb13-49e2-bf95-431e3083a80a}</Project>
+      <Name>Temporal.Net.InfluxDb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Temporal\InfluxData.Net.Kapacitor\Temporal.Net.Kapacitor.csproj">
+      <Project>{79dbd6da-9f99-47ec-ad42-1a308ab0eb37}</Project>
+      <Name>Temporal.Net.Kapacitor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.Temporal\InfluxDbManager\Temporal.DbAPI.csproj">
+      <Project>{0e3987f1-459c-459f-8242-c377ce91f21d}</Project>
+      <Name>Temporal.DbAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.DBModel\Scada.BLL\Scada.Business.csproj">
+      <Project>{38d7aa58-c95b-449b-86c6-a8073a56e11f}</Project>
+      <Name>Scada.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.DBModel\Scada.DAL\Scada.Database.csproj">
+      <Project>{9fe00521-3a8b-42b1-814e-585e99407b2e}</Project>
+      <Name>Scada.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.DBModel\Scada.Model\Scada.Model.csproj">
+      <Project>{53995dbb-9836-4647-ad22-865884fdeb9e}</Project>
+      <Name>Scada.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CenterServerConfig.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="influxdb\influx.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="influxdb\influxd.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="influxdb\influx_inspect.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="influxdb\influx_stress.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="influxdb\influx_tsm.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="influxdb\说明.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\down %281%29.ico" />
+    <None Include="Resources\down.png" />
+    <None Include="Resources\up.png" />
+    <None Include="Resources\play.ico" />
+    <None Include="Resources\app11.jpg" />
+    <None Include="Resources\MSN%2520Calendar.ico" />
+    <Content Include="w28.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IISExpress\Logs\" />
+    <Folder Include="IISExpress\TraceLogFiles\" />
+    <Folder Include="IISExpress\WebSite\" />
+    <Folder Include="logs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\..\packages\cef.redist.x64.97.1.6\build\cef.redist.x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\cef.redist.x64.97.1.6\build\cef.redist.x64.props'))" />
+    <Error Condition="!Exists('..\..\packages\cef.redist.x86.97.1.6\build\cef.redist.x86.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\cef.redist.x86.97.1.6\build\cef.redist.x86.props'))" />
+    <Error Condition="!Exists('..\..\packages\CefSharp.Common.97.1.60\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\CefSharp.Common.97.1.60\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('..\..\packages\CefSharp.Common.97.1.60\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\CefSharp.Common.97.1.60\build\CefSharp.Common.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\CefSharp.Common.97.1.60\build\CefSharp.Common.targets" Condition="Exists('..\..\packages\CefSharp.Common.97.1.60\build\CefSharp.Common.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MDSConfiguration>
+	<Settings>
+		<Setting Key="ThisServerName" Value="CenterServer" />
+		<Setting Key="StorageType" Value="SQLite" />
+	</Settings>
+	<Servers>
+		<Server Name="CenterServer" Title="数据中心消息服务" IpAddress="192.168.1.6" Port="9993" Adjacents="" />
+	</Servers>
+	<Applications />
+	<Stations>
+		<Station PhysicalAddress="192.168.1.6" StationName="Station_19216816" StationTitle="192.168.1.6" PhysicalMAC="0028F89F632F"/>
+		<Station PhysicalAddress="192.168.2.7" StationName="Station_19216827" StationTitle="192.168.2.7" PhysicalMAC="0028F89F632F"/>
+		<Station PhysicalAddress="192.168.2.19" StationName="Station_192168219" StationTitle="192.168.2.19" PhysicalMAC="B8763FD239EA"/>
+	</Stations>
+</MDSConfiguration>
+

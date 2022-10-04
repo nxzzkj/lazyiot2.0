@@ -1,0 +1,233 @@
+﻿@model  ScadaWeb.Model.ScadaEventModel
+@{
+    ViewBag.Title = "通用实时报警";
+    Layout = "~/Views/Shared/_LayoutList.cshtml";
+}
+
+<!--模糊搜索区域-->
+<div class="layui-row">
+    <form class="layui-form layui-col-md12 ok-search" lay-filter="formTest" name="formTest" id="formTest">
+
+        <div class="layui-input-inline">
+            <label class="layui-form-label">IO筛选</label>
+        </div>
+        <div class="layui-input-inline">
+            <select name="SERVER_ID" id="SERVER_ID" placeholder="请选择采集站" lay-filter="SERVER_ID" ></select>
+        </div>
+
+        <div class="layui-input-inline">
+            <select name="COMM_ID" id="COMM_ID" placeholder="请选择通道" lay-filter="COMM_ID"></select>
+        </div>
+
+        <div class="layui-input-inline">
+            <select name="DEVICE_ID" id="DEVICE_ID" placeholder="请选择设备" lay-filter="DEVICE_ID"></select>
+        </div>
+        <div class="layui-input-inline">
+            <select id="Event" name="Event" placeholder="事件类型" class="layui-input" lay-filter=""></select>
+        </div>
+
+        @Html.SearchBtnHtml("确定")
+
+
+    </form>
+</div>
+<!--数据表格-->
+<table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+ 
+<script>
+
+    layui.config({ base: '/Content/lib/tablePlug/' }).use(["form", "okLayer", "okUtils", 'tablePlug'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+        var tablePlug = layui.tablePlug;
+
+        var $ = layui.$;
+  
+   
+        function getsub(obj) {
+
+            if (obj.children != undefined && obj.children != null && obj.children.length > 0) {
+
+                $.each(obj.children, function (k, v) {
+
+                    sub.push(v.id);
+                    getsub(v);
+                });
+            }
+
+            return sub;
+        };
+
+        tablePlug.smartReload.enable(true);//处理不闪动的关键代码
+
+
+        let AllTable = table.render({
+            elem: "#tableId",
+            url: "/Scada/ScadaEvent/GeneralRealEvent",
+            limit: 300,
+            limits: [100, 200, 300, 500, 600, 800, 1000, 1500, 2000, 3000],
+            width: document.body.clientWidth - 10,
+            height: 'full-80',
+            page: true,
+            loading: false,
+            id: 'RealEvent',
+
+            jump: function (obj, first) {
+                if (!first) {
+                    layer.msg('第 ' + obj.curr + ' 页');
+                }
+            },
+            size: "sm",
+            smartReloadModel: true,
+            cols: [[
+                { field: 'zizeng', width: 60, title: '序号', fixed: 'left', templet: '#zizeng' },
+                { field: "Id", title: "事件ID", width: 140, fixed: 'left' },
+                { field: "Event", title: "事件类型", width: 120 },
+                { field: "Date", title: "发生时间", width: 140 },
+                { field: "Content", title: "事件内容", width: 120 },
+                { field: "SERVER_ID", title: "采集站", width: 120 },
+                { field: "COMM_NAME", title: "通道", width: 120 },
+                { field: "DEVICE_NAME", title: "设备", width: 120 },
+                { field: "IO_NAME", title: "IO点", width: 120 },
+                { field: "IO_LABEL", title: "IO名称", width: 120 }
+            ]],
+
+            done: function (res, curr, count) {
+                setTableScoll(this.elem.next('.layui-table-view'), this.scroll);
+            }
+        });
+        //获取滚动条
+        function getTableScoll(tbView) {
+            var scrollTop = tbView.find('.layui-table-body').scrollTop();
+            var scrollLeft = tbView.find('.layui-table-body').scrollLeft();
+            return {
+                scrollTop: scrollTop, scrollLeft: scrollLeft
+            }
+        };
+        //设置滚动条
+        function setTableScoll(tbView, scoll = { scrollTop: 0, scrollLeft: 0 }) {
+
+            tbView.find('.layui-table-body').scrollTop(scoll.scrollTop);
+            tbView.find('.layui-table-body').scrollLeft(scoll.scrollLeft);
+            table.resize('RealEvent'); //重置表格尺寸
+        };
+        var scrollTop = 0;
+        var layuiTable = $('.layui-table-main');
+        if (layuiTable != null && layuiTable.length > 0) {
+            scrollTop = layuiTable[0].scrollTop;
+        };
+        function reload() {
+            //执行重载
+            var wellRealGrid = $('#RealEvent');
+
+            table.reload('RealEvent', {
+                page: {
+                    curr: $(".layui-laypage-em").next().html()
+                },
+
+                scroll: getTableScoll($('#tableId').next('.layui-table-view'))
+
+            }, 'data');
+
+        };
+        //数据表定时加载
+        SCADA.RealDataCustumTimer(reload, 20);
+
+        //数据表定时加
+        form.on("submit(search)", function (data) {
+
+            AllTable.reload({
+                where: data.field,
+                page: { curr: 1 }
+            });
+            return false;
+        });
+        //加载事件类型
+        $.get("/Scada/ScadaEvent/GetEventItem", function (result) {
+            $("#Event").append("<option value='0'>全部</option>");
+
+            for (var i = 0; i < result.length; i++) {
+
+                $("#Event").append("<option value='" + result[i].name + "'>" + result[i].name + "</option>");
+            }
+            layui.form.render("select");
+
+        });
+
+        GetStations();
+        form.on('select(SERVER_ID)', function (data) {
+            GetCommunication();
+        });
+        form.on('select(COMM_ID)', function (data) {
+            GetDevice();
+        });
+
+        function GetStations() {
+
+            $("#SERVER_ID").empty();
+            $("#SERVER_ID").append("<option value=''>请选择采集站</option>");
+            //加载采集站类型
+            $.get("/Scada/ScadaGeneral/GetStations", function (result) {
+
+                for (var i = 0; i < result.data.length; i++) {
+
+                    $("#SERVER_ID").append("<option value='" + result.data[i].SERVER_ID + "'>" + result.data[i].SERVER_ID + "</option>");
+                }
+
+                layui.form.render("select");
+                //重新渲染select
+                form.render('select');
+                GetCommunication();
+
+            });
+        }
+        function GetCommunication() {
+
+            $("#COMM_ID").empty();
+            $("#COMM_ID").append("<option value=''>请选择通道</option>");
+            //加载通道类型
+            $.get("/Scada/ScadaGeneral/GetCommunications", { "serverid": $("#SERVER_ID").val() }, function (result) {
+
+
+                for (var i = 0; i < result.data.length; i++) {
+
+                    $("#COMM_ID").append("<option value='" + result.data[i].IO_COMM_ID + "'>" + result.data[i].IO_COMM_LABEL + "[" + result.data[i].IO_COMM_LABEL + "]" + "</option>");
+                }
+
+                layui.form.render("select");
+                //重新渲染select
+                form.render('select');
+                GetDevice();
+
+            });
+        }
+        function GetDevice() {
+            $("#DEVICE_ID").empty();
+
+            $("#DEVICE_ID").append("<option value=''>请选择设备</option>");
+            //加载通道类型
+            $.get("/Scada/ScadaGeneral/GetDevices", { "serverid": $("#SERVER_ID").val(), "communicationid": $("#COMM_ID").val() }, function (result) {
+
+
+                for (var i = 0; i < result.data.length; i++) {
+                    $("#DEVICE_ID").append("<option value='" + result.data[i].IO_DEVICE_ID + "'>" + result.data[i].IO_DEVICE_NAME + "[" + result.data[i].IO_DEVICE_LABLE + "]" + "</option>");
+                }
+
+                layui.form.render("select");
+
+                //重新渲染select
+                form.render('select');
+
+            });
+        }
+    })
+</script>
+ 
+ 
+ <script type="text/html" id="zizeng">
+    {{d.LAY_TABLE_INDEX+1}}
+</script>
+ 
+ 

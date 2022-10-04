@@ -1,0 +1,173 @@
+﻿
+@model ScadaWeb.Model.ScadaDBSourceModel
+@{
+    ViewBag.Title = "EquipmentGroups";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<div class="layui-row ">
+    <form class="layui-form layui-form-pane ok-form">
+
+
+
+        <div class="layui-form-item layui-bg-cyan">
+            <div class="layui-input-block">
+                <button class="layui-btn btn-default" lay-submit lay-filter="search">刷新</button>
+                @if (ViewBag.RoleAdd)
+                {
+
+
+                <button class="layui-btn  btn-success" type="button" id="addSqlServer" lay-filter="addSqlServer">添加SqlServer</button>
+                <button class="layui-btn  btn-success" type="button" id="addOracle" lay-filter="addOracle">添加Oracle</button>
+                <button class="layui-btn  btn-success" type="button" id="addMySql" lay-filter="addMySql">添加MySql</button>
+                <button class="layui-btn  btn-success" type="button" id="addSybase" lay-filter="addSybase">添加Sybase</button>
+                }
+
+            </div>
+        </div>
+    </form>
+</div>
+<fieldset class='layui-elem-field layui-field-title' style='margin-top: 10px;'>
+    <legend><i class='layui-icon'  >&#xe67a;</i>查询列表</legend>
+</fieldset>
+<div class="site-demo-flow layui-bg-cyan" id="groupequipmentcontent">
+
+</div>
+<div class="layui-layer-page layui-row" id="pageer"></div>
+
+<script>
+
+    layui.use(["form","okLayer", "okUtils",  "util", 'layer'], function () {
+
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+
+
+        let $ = layui.$;
+
+        form.on("submit(search)", function (data) {
+            curr = 0;
+            getDBList();
+            return false;
+        });
+
+
+            var allowedit = @(ViewBag.RoleEdit?"true": "false");
+        var allowdel = @(ViewBag.RoleAdd?"true": "false");
+
+        function getDBList() {
+            $.get("/Scada/ScadaDBSource/DBList",null, function (response) {
+                total = response.count;
+
+                var content = $("#groupequipmentcontent");
+                content.html("");//清空原来的内容
+                var html = "";
+                for (var i = 0; i < response.data.length; i++) {
+
+                    html += ("<div class='layui-col-md3 layui-collapse ' lay-accordion style='padding: 5px;' lay-filter='realcard'> <div class='layui-colla-item' >");
+                    html += ("   <div class='layui-colla-title' >");
+                    html += ("  <div class='layui-btn-group'  style='padding-right: 10px;' >");
+                    if (allowedit==true)
+                    html += ("    <button type='button' class='layui-btn layui-btn-primary  layui-btn-sm' title='编辑数据源'  onclick='modeledit(\"" + response.data[i].DBTitle + "\",\"" + response.data[i].Id + "\")'><i class='layui-icon' style='color:green' >&#xe642;</i></button>");//编辑按钮
+                    if (allowdel == true)
+                    html += ("    <button type='button' class='layui-btn layui-btn-primary  layui-btn-sm' title='删除数据源'   lay-filter='del' onclick='modeldel(\"" + response.data[i].DBTitle + "\",\"" + response.data[i].Id + "\")'><i class='layui-icon'  style='color:red' >&#xe640;</i></button>");//删除按钮
+
+                    html += ("   </div></div>");
+                    html += ("   <div class='layui-colla-content  layui-show layui-bg-cyan' >");
+                    html += (" <div   class='layui-form-item ' >");
+                    html += ("  <fieldset class='layui-elem-field layui-field-title' style='margin-top: 10px;'>");
+                    html += ("  <legend><i class='layui-icon'  style='color:yeelow' >&#xe67a;</i>" + response.data[i].DBTitle +"</legend>");
+                    html += ("</fieldset>");
+                    html += ("</div>");
+                    var icon = "";
+                    switch (response.data[i].DBType) {
+                        case "SqlServer":
+                            icon = "../Content/img/sqlserver.png";
+                            break;
+                        case "Oracle":
+                            icon = "../Content/img/oracle.png";
+                            break;
+                        case "Mysql":
+                            icon = "../Content/img/mysql.png";
+                            break;
+                        case "Sybase":
+                            icon = "../Content/img/sybase.png";
+                            break;
+
+                    }
+                    html += (" <div   class='layui-form-item '  style='fontsize:15;' >");//增加一个设备数量的说明
+                    html += ("<div class='layui-input-inline' ><img style='width:100px;' src='" + icon + "'></img></div>");
+
+                    html += ("</div>")
+                    html += (" <div   class='layui-form-item '  style='fontsize:15;' >");//增加一个设备数量的说明
+                    html += ("<div class='layui-input-inline'  ><i class='layui-icon ' style='color:red' >&#xe667;</i>&nbsp;" + response.data[i].DBType + "</div>");
+
+                    html += ("</div>");
+
+                    html += (" <div   class='layui-form-item '  style='fontsize:15;' >");//增加一个设备数量的说明
+                    html += ("<div class='layui-input-inline' ><i class='layui-icon ' style='color:red' >&#xe656;</i>&nbsp;" + response.data[i].DBTitle + "</div>");
+                    html += ("</div>");
+
+                    html += (" <div   class='layui-form-item '  style='fontsize:15;' >");//增加一个设备数量的说明
+                    html += ("<div class='layui-input-inline' ><i class='layui-icon ' style='color:red' >&#xe655;</i>&nbsp;" + response.data[i].ConnectorString + "</div>");
+
+                    html += ("</div>");
+
+                    html += (" <div   class='layui-form-item ' >");
+                    html += ("  <fieldset class='layui-elem-field layui-field-title' style='margin-top: 10px;'>");
+
+                    html += ("</fieldset>");
+                    html += ("</div>");
+
+
+                    html += ("  </div>");
+                    html += ("   </div>");
+                    html += ("  </div>");
+                    html += ("  </div>");
+
+
+                }
+                content.html(html);
+            });
+        }
+        getDBList();//
+        $('#addSqlServer').on('click', function () {
+            okLayer.open("添加SqlServer数据源", "/Scada/ScadaDBSource/AddSqlServer", "70%", "90%", null, null);
+        });
+        $('#addOracle').on('click', function () {
+            okLayer.open("添加Oracle数据源", "/Scada/ScadaDBSource/AddOracle", "70%", "90%", null, null);
+        });
+        $('#addMySql').on('click', function () {
+            okLayer.open("添加MySql数据源", "/Scada/ScadaDBSource/AddMysql", "70%", "90%", null, null);
+        });
+        $('#addSybase').on('click', function () {
+            okLayer.open("添加Sybase数据源", "/Scada/ScadaDBSource/AddSybase", "70%", "90%", null, null);
+        });
+
+
+
+        window.modeldel = function (title, modelid) {
+            okLayer.confirm("确定要删除" + title + "数据源吗？", function (index) {
+                layer.close(index);
+                okUtils.ajax("/Scada/ScadaDBSource/DeleteDBSource", "get", { "id": modelid }, true).done(function (response) {
+                    if (response.state == "success") {
+                        getDBList();
+                    }
+
+
+                }).fail(function (error) {
+                    console.log(error)
+                });
+            });
+        }
+        window.modeledit = function (title, modelid) {
+            okLayer.open(title + "数据源编辑", "/Scada/ScadaDBSource/EditDBSource/" + modelid, "70%", "97%", null, null);
+
+        }
+
+
+
+    });
+
+</script>
+

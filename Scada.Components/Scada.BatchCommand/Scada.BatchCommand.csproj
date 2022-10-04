@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0144DA3E-D2B4-4477-A559-87A7EC24D189}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Scada.BatchCommand</RootNamespace>
+    <AssemblyName>Scada.BatchCommand</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BachCommandBoolExpression.cs" />
+    <Compile Include="BachCommandIOValue.cs" />
+    <Compile Include="BachCommandOperator.cs" />
+    <Compile Include="BatchCommandGraphEngineProject.cs" />
+    <Compile Include="BatchCommandItem.cs" />
+    <Compile Include="BatchCommandItemExecuteCondition.cs" />
+    <Compile Include="BatchCommandItemExecuteResult.cs" />
+    <Compile Include="BatchCommandItemExecuteTime.cs" />
+    <Compile Include="BatchCommandItemExecuteType.cs" />
+    <Compile Include="BatchCommandItemRunResult.cs" />
+    <Compile Include="BatchCommandItemRunResultType.cs" />
+    <Compile Include="BatchCommandItemShape.cs" />
+    <Compile Include="BatchCommandItemWriteValueType.cs" />
+    <Compile Include="BatchCommandMachineTrainTask.cs" />
+    <Compile Include="BatchCommandManualTask.cs" />
+    <Compile Include="BatchCommandResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BatchCommandResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="BatchCommandSelectorShape.cs" />
+    <Compile Include="BatchCommandShape.cs" />
+    <Compile Include="BatchCommandTask.cs" />
+    <Compile Include="BatchCommandTaskGraph.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BatchCommandTaskGraphAbstract.cs" />
+    <Compile Include="BatchCommandTimeSpan.cs" />
+    <Compile Include="BatchCommandTimingTime.cs" />
+    <Compile Include="BatchCommandTimingTimeType.cs" />
+    <Compile Include="BatchCommandType.cs" />
+    <Compile Include="CommandItemType.cs" />
+    <Compile Include="delegate.cs" />
+    <Compile Include="ElementType.cs" />
+    <Compile Include="ExecuteTimeType.cs" />
+    <Compile Include="IBatchCommandTaskGraphSite.cs" />
+    <Compile Include="IOFlowTree.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="IOParaPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IOParaPicker.Designer.cs">
+      <DependentUpon>IOParaPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IOParaTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="IoTreeNode.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyGridUI\PropertyBag.cs" />
+    <Compile Include="PropertyGridUI\PropertyDelegate.cs" />
+    <Compile Include="PropertyGridUI\PropertySpec.cs" />
+    <Compile Include="PropertyGridUI\PropertySpecEventArgs.cs" />
+    <Compile Include="RectSelectType.cs" />
+    <Compile Include="RoundRectStyle.cs" />
+    <Compile Include="IOParaPickerUIEditor.cs" />
+    <Compile Include="Selector.cs" />
+    <Compile Include="BatchCommandMapArea.cs" />
+    <Compile Include="Serializable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Scada.Base\Scada.DBUtility\Scada.DBUtility.csproj">
+      <Project>{0988c62e-247f-471f-a183-db509c7a3839}</Project>
+      <Name>Scada.DBUtility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.DBModel\Scada.BLL\Scada.Business.csproj">
+      <Project>{38d7aa58-c95b-449b-86c6-a8073a56e11f}</Project>
+      <Name>Scada.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.DBModel\Scada.DAL\Scada.Database.csproj">
+      <Project>{9fe00521-3a8b-42b1-814e-585e99407b2e}</Project>
+      <Name>Scada.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scada.DBModel\Scada.Model\Scada.Model.csproj">
+      <Project>{53995DBB-9836-4647-AD22-865884FDEB9E}</Project>
+      <Name>Scada.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BatchCommandResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BatchCommandResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IOFlowTree.resx">
+      <DependentUpon>IOFlowTree.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IOParaPicker.resx">
+      <DependentUpon>IOParaPicker.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CommandTask.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CommandAutoTask.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CommandTriggerTask.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BatchCommand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BatchIOParaValueCommand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\End.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Start.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Normal.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

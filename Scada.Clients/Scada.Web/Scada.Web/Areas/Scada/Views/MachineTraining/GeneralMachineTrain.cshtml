@@ -1,0 +1,217 @@
+﻿@model  ScadaWeb.Model.ScadaMachineTrainingForecastModel
+@{
+    ViewBag.Title = "实时工况预测";
+    Layout = "~/Views/Shared/_LayoutList.cshtml";
+}
+
+<!--模糊搜索区域-->
+<div class="layui-row">
+    <form class="layui-form layui-col-md12 ok-search" lay-filter="formTest" name="formTest" id="formTest">
+
+        <div class="layui-input-inline">
+            <label class="layui-form-label">IO筛选</label>
+        </div>
+        <div class="layui-input-inline">
+            <select name="ServerId" id="ServerId" placeholder="请选择采集站" lay-filter="ServerId"></select>
+        </div>
+
+        <div class="layui-input-inline">
+            <select name="CommunicationId" id="CommunicationId" placeholder="请选择通道" lay-filter="CommunicationId"></select>
+        </div>
+
+        <div class="layui-input-inline">
+            <select name="DeviceId" id="DeviceId" placeholder="请选择设备" lay-filter="DeviceId"></select>
+        </div>
+ 
+
+        @Html.SearchBtnHtml("确定")
+
+
+    </form>
+</div>
+<!--数据表格-->
+<table class="layui-hide" id="RealMachineTrain" lay-filter="tableFilter"></table>
+ 
+<script>
+
+    layui.config({ base: '/Content/lib/tablePlug/' }).use([ "form", "okLayer", "okUtils",  'tablePlug'], function () {
+        let table = layui.table;
+        let form = layui.form;
+   
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+        var tablePlug = layui.tablePlug;
+
+        var $ = layui.$;
+  
+       
+
+        tablePlug.smartReload.enable(true);//处理不闪动的关键代码
+      
+
+        let AllTable = table.render({
+            elem: "#RealMachineTrain",
+            url: "/Scada/MachineTraining/GeneralRealMachineTrainList",
+            limit: 300,
+            limits: [100,200,300,500,600,800,1000,1500,2000,3000],
+            width: document.body.clientWidth - 10,
+            height: 'full-80',
+            page: true,
+            loading: false,
+            id: 'RealMachineTrain',
+            toolbar: "#toolbarTpl",
+            jump: function (obj, first) {
+                if (!first) {
+                    layer.msg('第 ' + obj.curr + ' 页');
+                }
+            },
+            size: "sm",
+            smartReloadModel: true,
+            cols: [[
+                { field: 'zizeng', width: 60, title: '序号', fixed: 'left', templet: '#zizeng' },
+                { field: "TaskName", title: "任务名称", width: 140, fixed: 'left' },
+                { field: "ForecastLabel", title: "工况", width: 120 },
+                { field: "ForecastDate", title: "时间", width: 140 },
+                { field: "ForecastColumnValues", title: "输入值", width: 120 },
+                { field: "ForecastColumnNames", title: "输入参数", width: 120 },
+                { field: "Algorithm", title: "实现算法", width: 120 },
+                { field: "AlgorithmType", title: "算法分类", width: 120 },
+                { field: "ForecastScore", title: "分数评价", width: 120 },
+                { field: "DeviceName", title: "设备", width: 120 },
+                { field: "CommunicationName", title: "通道", width: 120 },
+                { field: "ServerId", title: "采集站", width: 120 }
+            ]],
+           
+            done: function (res, curr, count) {
+                setTableScoll(this.elem.next('.layui-table-view'), this.scroll);
+            }
+        });
+        //获取滚动条
+   function getTableScoll(tbView){
+            var scrollTop = tbView.find('.layui-table-body').scrollTop();
+            var scrollLeft= tbView.find('.layui-table-body').scrollLeft();
+            return {
+                scrollTop:scrollTop,scrollLeft:scrollLeft
+            }
+        };
+        //设置滚动条
+    function setTableScoll(tbView,scoll= {scrollTop:0,scrollLeft:0})
+    {
+
+        tbView.find('.layui-table-body').scrollTop(scoll.scrollTop);
+        tbView.find('.layui-table-body').scrollLeft(scoll.scrollLeft);
+        table.resize('RealMachineTrain'); //重置表格尺寸
+    };
+    var scrollTop=0;
+    var layuiTable = $('.layui-table-main');
+    if(layuiTable!=null&&layuiTable.length>0){
+        scrollTop = layuiTable[0].scrollTop;
+    };
+    function reload() {
+        //执行重载
+        var wellRealGrid = $('#RealMachineTrain');
+
+        table.reload('RealMachineTrain', {
+            page: {
+                curr: $(".layui-laypage-em").next().html()
+            },
+
+            scroll: getTableScoll($('#RealMachineTrain').next('.layui-table-view'))
+
+        }, 'data');
+
+    };
+    //数据表定时加载
+    SCADA.RealDataCustumTimer(reload,10);
+    
+    //数据表定时加
+    form.on("submit(search)", function (data) {
+
+        AllTable.reload({
+            where: data.field,
+            page: { curr: 1 }
+        });
+        return false;
+    });
+    
+        GetStations();
+        form.on('select(ServerId)', function (data) {
+            GetCommunication();
+        });
+        form.on('select(CommunicationId)', function (data) {
+            GetDevice();
+        });
+
+        function GetStations() {
+
+            $("#ServerId").empty();
+            $("#ServerId").append("<option value=''>请选择采集站</option>");
+            //加载采集站类型
+            $.get("/Scada/ScadaGeneral/GetStations", function (result) {
+
+                for (var i = 0; i < result.data.length; i++) {
+
+                    $("#ServerId").append("<option value='" + result.data[i].SERVER_ID + "'>" + result.data[i].SERVER_ID + "</option>");
+                }
+
+                layui.form.render("select");
+                //重新渲染select
+                form.render('select');
+                GetCommunication();
+
+            });
+        }
+        function GetCommunication() {
+
+            $("#CommunicationId").empty();
+            $("#CommunicationId").append("<option value=''>请选择通道</option>");
+            //加载通道类型
+            $.get("/Scada/ScadaGeneral/GetCommunications", { "serverid": $("#ServerId").val() }, function (result) {
+
+
+                for (var i = 0; i < result.data.length; i++) {
+
+                    $("#CommunicationId").append("<option value='" + result.data[i].IO_COMM_ID + "'>" + result.data[i].IO_COMM_LABEL + "[" + result.data[i].IO_COMM_LABEL + "]" + "</option>");
+                }
+
+                layui.form.render("select");
+                //重新渲染select
+                form.render('select');
+                GetDevice();
+
+            });
+        }
+        function GetDevice() {
+            $("#DeviceId").empty();
+
+            $("#DeviceId").append("<option value=''>请选择设备</option>");
+            //加载通道类型
+            $.get("/Scada/ScadaGeneral/GetDevices", { "serverid": $("#ServerId").val(), "communicationid": $("#CommunicationId").val() }, function (result) {
+
+
+                for (var i = 0; i < result.data.length; i++) {
+                    $("#DeviceId").append("<option value='" + result.data[i].IO_DEVICE_ID + "'>" + result.data[i].IO_DEVICE_NAME + "[" + result.data[i].IO_DEVICE_LABLE + "]" + "</option>");
+                }
+
+                layui.form.render("select");
+
+                //重新渲染select
+                form.render('select');
+
+            });
+        }
+})
+</script>
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <label><i class="ok-icon" style="color:red;">&#xe670;</i>注意:此处实时显示当前数据的工况预测。</label>  
+</script>
+<!-- 行工具栏模板 -->
+<script type="text/html" id="operationTpl">
+    @Html.RightToolBarHtml(ViewData["RightButtonList"])
+</script>
+ <script type="text/html" id="zizeng">
+    {{d.LAY_TABLE_INDEX+1}}
+</script>
+ 
+ 

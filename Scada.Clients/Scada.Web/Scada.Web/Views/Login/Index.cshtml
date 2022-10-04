@@ -1,0 +1,172 @@
+﻿@model ScadaWeb.Web.Areas.SysSet.Models.WebModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en" class="page-fill">
+<head>
+    <meta charset="UTF-8">
+    <title>@Model.SiteName-登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="~/Content/css/oksub.css" />
+    <style type="text/css">
+        .copyright {
+            padding: 12px 0;
+            background: #1D1D21;
+            width: 100%;
+            position: absolute;
+            bottom: 0px;
+            color: #fff;
+        }
+
+        .container {
+            width: 90%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .copyright .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="page-fill">
+    <div style="position: absolute; z-index: 999; top: 20px; left: 20px; color: #fff; font-size: 13px; line-height: 22px;">
+        <strong style=" color: red; font-size: 14px; font-weight: bold;">Tip：普通用户只有菜单权限，测试用户啥都没有</strong><br>
+        普通用户账号：user 密码：123456<br>
+        测试用户账号：test 密码：123456<br>
+    </div>
+    <div class="page-fill" id="login">
+        <form class="layui-form">
+            <div class="login_face"><img src="~/Content/images/logo.jpg"></div>
+            <div class="layui-form-item input-item">
+                <label for="username">用户名</label>
+                <input type="text" lay-verify="required" name="username" placeholder="请输入账号" autocomplete="off" id="username" class="layui-input">
+            </div>
+            <div class="layui-form-item input-item">
+                <label for="password">密码</label>
+                <input type="password" lay-verify="required|password" name="password" placeholder="请输入密码" autocomplete="off" id="password" class="layui-input">
+            </div>
+            <div class="layui-form-item input-item captcha-box">
+                <label for="captcha">验证码</label>
+                <input type="text" lay-verify="required|captcha" name="captcha" placeholder="请输入验证码" autocomplete="off" id="captcha" maxlength="4" class="layui-input">
+                <div class="img ok-none-select"><img id="imgcode" width="100%" height="100%" src="~/Login/GetAuthCode" alt="验证码" /></div>
+            </div>
+            <div class="layui-form-item">
+                <button class="layui-btn layui-block" lay-filter="login" lay-submit="">登录</button>
+            </div>
+        </form>
+    </div>
+    <div class="copyright">
+        <div class="container">
+            <div class="layui-row">
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4 text-left">
+                    <p>
+                            LazyOS是基于开源时序数据库”Influxdb”为基础开发的一套Influxdb物联网组态应用系统。
+                        系统分为开源版和商业版两种。
+                    </p> <p>
+                            LazyOS该系统采用分布式架构，主要面向大型企业、国企。该系统分布式架构实现了采集100万IO点，
+                        千套网关设备的秒级采集。
+                    </p>  <p>
+                            LazyOS系统的Web组态包含了大量的web端显示组件。主要分为，常规图元、工业动态图元、标志符号、
+                        工业静态图元、Web页面布局组件、大屏展示组件、表格及图表组件、关系数据库组件、事件状态组件、
+                        IO基础组件。
+                    </p>
+                    <p>
+                           通过LazyOS组态的应用，可以让用户通过可视化拖
+                        拽拉等方式实现web端网页布局。LazyOS组态内部实现了大量的动画效果、元素滤镜特效（模糊，阴
+                        影、平移、翻转、纹理、闪烁）的大量特效，通过这些特效可以实现web端高端大气的动态显示效果。
+
+                    </p>
+                </div>
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4 text-center">
+                    <p>
+                        <img src="~/Content/images/QQCode.png" style="width: 122px" />
+                        <img src="~/Content/images/WeixC.jpg"  style="width: 126px" />
+                        <img src="~/Content/images/WeixP.jpg" style="width: 140px" />
+                    </p>
+                </div>
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4 text-right">
+                    <p>
+                        LazyOS开源地址:
+                    </p>  <p>
+                        gitee:<a href="https://gitee.com/ningxia-zhongzhi/lazyiot" style=" color:white;font-size:16px;   " target="_blank">https://gitee.com/ningxia-zhongzhi/lazyiot</a>
+                    </p> github：<a href="https://github.com/nxzzkj/lazyiot" style=" color:white;font-size:16px;   " target="_blank"> https://github.com/nxzzkj/lazyiot </a>
+                                <p>
+                                    相关视频：<a href="https://pan.baidu.com/s/1-hlkMMYv4pg6xTbGmB-DMA" style=" color:white;font-size:16px;   " target="_blank">https://pan.baidu.com/s/1-hlkMMYv4pg6xTbGmB-DMA </a>  提取码：lazy
+
+                                </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--js逻辑-->
+    <script src="~/Content/lib/layui/layui.js"></script>
+    <script>
+        layui.use(["form", "okUtils", "okLayer"], function () {
+            let form = layui.form;
+            let $ = layui.jquery;
+            let okUtils = layui.okUtils;
+            let okLayer = layui.okLayer;
+            //退出登录时清空SessionStorage 切换不同账户登录后台会有Tab标签残留
+            sessionStorage.clear();
+            /**
+             * 数据校验
+             */
+            form.verify({
+                password: [/^[\S]{6,12}$/, "密码必须6到12位，且不能出现空格"]
+            });
+
+            /**
+             * 表单提交
+             */
+            form.on("submit(login)", function (data) {
+                okUtils.ajax("/Login/LoginOn", "post", data.field, true).done(function (response) {
+                    okLayer.greenTickMsg(response.message, function () {
+                        window.location = "/Home";
+                    })
+                }).fail(function (error) {
+                    console.log(error)
+                    //刷新二维码
+                    $("#imgcode").click();
+                });
+                return false;
+            });
+            /**
+             * 切换二维码
+             */
+            $("#imgcode").click(function () {
+                $("#imgcode").attr("src", "/Login/GetAuthCode?time=" + Math.random());
+            });
+            /**
+             * 表单input组件单击时
+             */
+            $("#login .input-item .layui-input").click(function (e) {
+                e.stopPropagation();
+                $(this).addClass("layui-input-focus").find(".layui-input").focus();
+            });
+
+            /**
+             * 表单input组件获取焦点时
+             */
+            $("#login .layui-form-item .layui-input").focus(function () {
+                $(this).parent().addClass("layui-input-focus");
+            });
+
+            /**
+             * 表单input组件失去焦点时
+             */
+            $("#login .layui-form-item .layui-input").blur(function () {
+                $(this).parent().removeClass("layui-input-focus");
+                if ($(this).val() != "") {
+                    $(this).parent().addClass("layui-input-active");
+                } else {
+                    $(this).parent().removeClass("layui-input-active");
+                }
+            })
+        });
+    </script>
+</body>
+</html>

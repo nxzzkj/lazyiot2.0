@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "EquipmentGroups";
+    Layout = "~/Views/Shared/_LayoutForm.cshtml";
+}
+<div class="layui-row">
+    <form class="layui-form layui-form-pane ok-form">
+        @*一些不需要更新的隐藏字段*@
+        <div class="layui-form-item">
+            <label class="layui-form-label">分组名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="Key" id="Key" placeholder="分组名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item  layui-bg-cyan">
+            <div class="layui-input-block">
+                <button class="layui-btn btn-default" lay-submit lay-filter="search">查询</button>
+                @if (ViewBag.RoleAdd)
+                {
+                    <button class="layui-btn  btn-success" type="button" id="add" lay-filter="add">添加新分组</button>
+                }
+                </div>
+        </div>
+    </form>
+</div>
+<fieldset class='layui-elem-field layui-field-title' style='margin-top: 10px;'>
+    <legend><i class='layui-icon'>&#xe67a;</i>结果列表</legend>
+</fieldset>
+
+<div class="layui-row " id="groupcontent">
+
+</div>
+ 
+
+<script>
+
+    layui.use(["form", "okLayer", "okUtils", "flow"], function () {
+        let form = layui.form;
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+
+        let $ = layui.$;
+        form.on("submit(search)", function (data) {
+            getEquipmentGroupList();
+            return false;
+        });
+        var allowedit = @(ViewBag.RoleEdit?"true": "false");
+        var allowdel = @(ViewBag.RoleAdd?"true": "false");
+
+        function getEquipmentGroupList() {
+            $.get("/Scada/ScadaEquipment/EquipmentGroupList", { "key": $("#Key").val() }, function (response) {
+
+                var content = $("#groupcontent");
+                content.html("");//清空原来的内容
+                var html = "";
+                for (var i = 0; i < response.count; i++) {
+
+                    html += ("<div class='layui-col-md2  layui-bg-gray' id='group_" + response.data[i].Id + ".  style='padding: 10px;' > <div class='layui-card' >");
+                    html += ("   <div class='layui-card-header ' style='color:green;'><h2><i class='layui-icon'>&#xe67a;</i>&nbsp;&nbsp;" + response.data[i].GroupTitle + "</h2></div>");
+                    html += ("   <div class='layui-card-body'>");
+                    html += ("      <div class='layui-col-md10'   style='color:blue;'>");//增加一个设备数量的说明
+                    html += ("<h2 ><a href='#'><i class='layui-icon ' >&#xe60a;</i>&nbsp;" + response.data[i].ModelCount + "&nbsp;套</h2></a></br>");
+                    html += ("   </div>");
+                    html += ("      <div class='layui-col-md10'   style='color:blue;'>");//增加一个设备数量的说明
+                    html += (" &nbsp;" + response.data[i].Remark + "</br></br>");
+                    html += ("   </div>");
+
+                    html += ("  <div class='layui-btn-group layui-input-inline layui-col-md12 '>");
+
+                    if (allowedit == true) {
+                        html += ("    <button type='button' class='layui-btn layui-btn-primary  layui-btn-sm' title='编辑'  onclick='groupedit(\"" + response.data[i].GroupTitle + "\",\"" + response.data[i].Id + "\")'><i class='layui-icon' style='color:red'>&#xe642;</i></button>");//编辑按钮
+                    }
+                    if (allowdel == true) {
+                        html += ("    <button type='button' class='layui-btn layui-btn-primary  layui-btn-sm' title='删除'  lay-filter='del' onclick='groupdel(\"" + response.data[i].GroupTitle + "\",\"" + response.data[i].Id + "\")'><i class='layui-icon' ' style='color:green'>&#xe640;</i></button>");//删除按钮
+                    }
+
+                    html += ("    <button type='button' class='layui-btn layui-btn-primary  layui-btn-sm' title='模型'  onclick='groupquery(\"" + response.data[i].GroupTitle + "\",\"" + response.data[i].Id + "\")'><i class='layui-icon'  style='color:blue'>&#xe62d;</i></button>");//设置数据
+                    html += (" <input type='hidden'  value='/Scada/ScadaEquipment/Equipments?id=" + $.urlParam('id') + "&GroupId=" + response.data[i].Id + "' id='url" + i + "' />");
+                    html += ("    <button type='button' class='layui-btn layui-btn-primary  layui-btn-sm' title='复制网址'  onclick='copyToClipboard(\"url" + i + "\")'><i class='layui-icon'   style='color:black'>&#xe621;</i></button>");//复制网址
+                    html += ("   </div><hr class='layui-border-cyan'/>");
+                    html += ("  </div>");
+                    html += ("   </div>");
+                    html += ("  </div>");
+                    html += ("  </div>");
+
+
+                }
+                content.html(html);
+            });
+        }
+        getEquipmentGroupList();//
+        $('#add').on('click', function () {
+            okLayer.open("添加分组", "/Scada/ScadaEquipment/AddGroup", "50%", "50%", null, null);
+        });
+        window.groupdel = function (title, groupid) {
+            okLayer.confirm("确定要删除" + title + "分组吗？", function (index) {
+                layer.close(index);
+                okUtils.ajax("/Scada/ScadaEquipment/DeleteGroup", "get", { "id": groupid }, true).done(function (response) {
+                    if (response.state == "success") {
+                        getEquipmentGroupList();
+                    }
+
+
+                }).fail(function (error) {
+                    console.log(error)
+                });
+            });
+        }
+
+
+        window.groupedit = function (title, groupid) {
+            okLayer.open("编辑分组", "/Scada/ScadaEquipment/EditGroup/" + groupid, "50%", "50%", null, null);
+        }
+
+        $.urlParam = function (name) {
+            var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            return results[1] || 0;
+        }
+
+        window.groupquery = function (title, groupid) {
+            okLayer.open("查看模型", "/Scada/ScadaEquipment/Equipments?id=" + $.urlParam('id') + "&GroupId=" + groupid, "100%", "100%", null, null);
+        }
+        //复制内容到粘贴板
+        window.copyToClipboard = function (elemId) {
+            var target = document.getElementById(elemId);
+            // 选择内容
+            var save = function (e) {
+                e.clipboardData.setData('text/plain', target.value);//下面会说到clipboardData对象
+                e.preventDefault();//阻止默认行为
+            }
+            document.addEventListener('copy', save);
+            document.execCommand("copy");//使文档处于可编辑状态，不然无效
+            alert("复制成功 " + target.value);
+
+        }
+    });
+
+</script>

@@ -1,0 +1,317 @@
+﻿@model  ScadaWeb.Model.ScadaMachineTrainingConditionModel
+@{
+    ViewBag.Title = "样本数据编辑";
+    Layout = "~/Views/Shared/_LayoutList.cshtml";
+}
+<style>
+
+    .layui-table-cell, .layui-table-box, .layui-table-body {
+        overflow: visible;
+    }
+    /* 设置下拉框的高度与表格单元格的高度相同 */
+    td .layui-form-select {
+        margin-top: -10px;
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+</style>
+<!--模糊搜索区域-->
+<div class="layui-row">
+  
+    <form class="layui-form layui-col-md12 ok-search">
+        @Html.Hidden("ServerID", Model.ServerID)
+        @Html.Hidden("CommunicateID", Model.CommunicateID)
+        @Html.Hidden("DeviceID", Model.DeviceID)
+        @Html.Hidden("Id", Model.Id)
+        @Html.Hidden("TaskId", Model.TaskId)
+        @Html.Hidden("Properties", Model.Properties)
+        @Html.Hidden("DataFile", Model.DataFile)
+        @Html.Hidden("CreateTime", Model.CreateTime)
+        @Html.Hidden("CreateUserId", Model.CreateUserId)
+        @Html.Hidden("UpdateUserId", Model.UpdateUserId)
+        @Html.Hidden("UpdateTime", Model.UpdateTime)
+        @Html.Hidden("Enable", Model.Enable)
+        @Html.Hidden("DataLength", Model.DataLength)
+        @Html.Hidden("MarkDate", Model.MarkDate)
+        @Html.Hidden("MarkTitle", Model.MarkTitle)
+        @Html.Hidden("Conditions", Model.Conditions)
+        @Html.Hidden("IsTrain", Model.IsTrain)
+        @Html.Hidden("AlgorithmClassify", Model.AlgorithmClassify)
+        <div class="layui-input-inline">
+            <input class="layui-input" placeholder="开始日期" autocomplete="off" name="StartDate" id="StartDate" value="@Model.StartDate">
+
+        </div>
+        <div class="layui-input-inline">
+            <input class="layui-input" placeholder="结束日期" autocomplete="off" name="EndDate" id="EndDate" value="@Model.EndDate">
+        </div>
+        <div class="layui-input-inline">
+            <select class="layui-input" placeholder="结束日期" name="ReadHistory" id="ReadHistory">
+                <option value="0">现有训练数据</option>
+                <option value="1">历史库数据</option>
+            </select>
+
+        </div>
+        @Html.SearchBtnHtml("查询数据")
+        <div class="layui-input-inline">
+            <label>请输入样本名称:</label>
+
+        </div>
+        <div class="layui-input-inline">
+            <input class="layui-input" placeholder="样本名称" autocomplete="off" name="ConditionTitle" id="ConditionTitle" value="@Model.ConditionTitle">
+
+        </div>
+
+
+
+        <button class="layui-btn" lay-submit lay-filter="save">保存样本</button>
+    </form>
+</div>
+<!--数据表格-->
+<table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+
+<script>
+
+
+
+    layui.use(["table", "form", "okLayer", "okUtils", "laydate"], function () {
+        let table = layui.table;
+        let form = layui.form;
+
+        let okLayer = layui.okLayer;
+        let okUtils = layui.okUtils;
+        let startdate = layui.laydate;
+        let enddate = layui.laydate;
+        var $ = layui.$;
+        var algorithmclassify = "@Model.AlgorithmClassify";
+
+        startdate.render({
+            elem: '#StartDate'
+            , type: 'datetime'
+        });
+        enddate.render({
+            elem: '#EndDate'
+            , type: 'datetime'
+        });
+     
+        
+
+        var cols = ('@Model.Properties').split(',');
+        var nCols = new Array();
+        nCols.push({ field: "DateStampTime", title: "时间", width: 120 });
+        if (algorithmclassify == "二元分类") {
+            nCols.push({ field: "MarkLabel", title: "标记", width: 120, templet: '#markLable'  });
+        }
+        else{
+            nCols.push({ field: "MarkLabel", title: "标记", width: 120, edit: 'text' });
+        }
+
+        for (var i = 0; i < cols.length; i++)
+        {
+            nCols.push({ field: cols[i], title: cols[i], width: 120,edit:'text' });
+        }
+        nCols.push({ field: "", title: "数据填补操作", width: 300, templet: '#operationTpl' });
+
+
+        let AllTable = table.render({
+            elem: "#tableId",
+            url: "/Scada/MachineTraining/MachineTrainingConditionDataList?id=@Model.Id&taskid=@Model.TaskId&startdate=" + $("#StartDate").val() + "&enddate=" + $("#EndDate").val() + "&his=" + $("#ReadHistory").val(),
+            limit: 1000,
+            limits: [100, 200, 300, 500, 600, 800, 1000, 1500, 2000, 3000],
+            width: document.body.clientWidth - 10,
+            height: 'full-40',
+            page: false,
+            loading: true,
+            toolbar: "#toolbarTpl",
+            id: 'MachineTraining',
+            jump: function (obj, first) {
+                if (!first) {
+                    layer.msg('第 ' + obj.curr + ' 页');
+                }
+            },
+
+            size: "sm",
+            cols: [nCols],
+            done: function (res, curr, count) {
+                //计算单元格最大值，最小值，平均值
+                var data = table.cache;
+                var array = data.MachineTraining;
+                for (var j = 0; j < cols.length; j++) {
+                    var max = -99999999;
+                    var min = 99999999;
+                    var avg = 0;
+                    var avgnumber = 0;
+                    for (var i = 0; i < array.length; i++) {
+                        var row = array[i];
+                        var current = row[cols[j]];
+                        if (current != null && current != "") {
+                            max = Math.max(parseFloat(current), max);
+                            min = Math.min(parseFloat(current), min);
+                            avg += parseFloat(current);
+                            avgnumber++;
+                        }
+                    }
+                    if (avgnumber > 0) {
+                        avg = Math.round(avg / avgnumber, 4);
+                    }
+
+                    maxArray.push(max == -99999999 ? 0 : max);
+                    minArray.push(min == 99999999 ? 0 : min);
+                    avgArray.push(avg);
+                    //绑定select 值
+
+                 
+                }  
+                res.data.forEach(function (item, index) {//根据已有的值回填下拉框
+                    layui.each($("select[name='tvalue']", ""), function (index, item) {
+                        var elem = $(item);
+                        if (data.MachineTraining[index]["MarkLabel"]=="false")
+                            elem.next().children().children()[0].defaultValue = "否";
+                        else
+                            elem.next().children().children()[0].defaultValue = "是";
+
+                    });
+                    table.render('select');
+
+                });
+            },
+            parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+                var result = eval('(' + res + ')');
+                 maxArray = new Array();
+                 minArray = new Array();
+                 avgArray = new Array();
+                return result;
+            }
+
+        });
+        form.on("submit(search)", function (data) {
+
+            AllTable.reload({
+                where: data.field,
+                page: { curr: 1 },
+                  url: "/Scada/MachineTraining/MachineTrainingConditionDataList?id=@Model.Id&taskid=@Model.TaskId&startdate=" + $("#StartDate").val() + "&enddate=" + $("#EndDate").val() + "&his=" + $("#ReadHistory").val(),
+            });
+            return false;
+        });
+        form.on('select(selectmark)', function (data) {
+            // console.log(data.value);
+            // debugger;
+            var elem = $(data.elem);
+            var trElem = elem.parents('tr');
+            var tableData = table.cache["MachineTraining"];
+
+        
+            // 更新到表格的缓存数据中，才能在获得选中行等等其他的方法中得到更新之后的值
+            tableData[trElem.data('index')]["MarkLabel"] = data.value;
+           
+        });
+        form.on("submit(save)", function (data) {
+            var tran = { model: data.field, DataTableJSON: JSON.stringify(table.cache).replace("/\/g", "") };
+            okUtils.ajax("/Scada/MachineTraining/MachineTrainingConditionSave", "post", tran, true).done(function (response) {
+                okLayer.greenTickMsg(response.message, function () {
+                    parent.location.reload(); // 父页面刷新
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));//先得到当前iframe层的索引 再执行关闭
+                });
+            }).fail(function (error) {
+                console.log(error)
+            });
+            return false;
+        });
+        table.on("tool(tableFilter)", function (obj) {
+            let data = obj.data;
+            switch (obj.event) {
+                case "TaskConditionMax":
+                    TaskConditionMax(obj);//field Id 和 数据库表字段 Id 要一致
+                    break;
+                case "TaskConditionMin":
+                    TaskConditionMin(obj);//field Id 和 数据库表字段 Id 要一致
+                    break;
+                case "TaskConditionAvg":
+                    TaskConditionAvg(obj);//field Id 和 数据库表字段 Id 要一致
+                    break;
+                case "TaskConditionDel":
+                    TaskConditionDel(obj);//field Id 和 数据库表字段 Id 要一致
+                    break;
+
+
+            }
+        });
+        var maxArray = new Array();
+        var minArray = new Array();
+        var avgArray = new Array();
+        function TaskConditionMax(obj)
+        {
+            var rowdata = obj.data;
+            for (var i = 0; i < cols.length; i++) {
+                if (rowdata[cols[i]] == null || rowdata[cols[i]] == "") {
+
+                    rowdata[cols[i]] = maxArray[i];
+                    obj.update(rowdata);
+                }
+
+            }
+
+        }
+        function TaskConditionMin(obj)
+        {
+
+            var rowdata = obj.data;
+            for (var i = 0; i < cols.length; i++) {
+                if (rowdata[cols[i]] == null || rowdata[cols[i]] == "") {
+
+                    rowdata[cols[i]] = minArray[i];
+                    obj.update(rowdata);
+                }
+
+            }
+        }
+        function TaskConditionAvg(obj)
+        {
+
+            var rowdata = obj.data;
+            for (var i = 0; i < cols.length; i++) {
+                if (rowdata[cols[i]] == null || rowdata[cols[i]] == "") {
+
+                    rowdata[cols[i]] = avgArray[i];
+                    obj.update(rowdata);
+                }
+
+            }
+
+        }
+        function TaskConditionAvg(obj) {
+            obj.del();
+        }
+
+
+    })
+</script>
+<script type="text/html" id="markLable">
+    <select name="tvalue" lay-filter="selectmark">
+
+
+
+        <option value="false">@Model.FalseText</option>
+        <option value="true"
+                {{#  if(d.MarkLabel=="true"){ }}
+                selected   {{#  } }}
+        >
+            @Model.TrueText
+            </option>
+         
+        </select>
+  
+
+
+</script>
+<script type="text/html" id="operationTpl">
+    <button class='layui-btn layui-btn-xs ' lay-event='TaskConditionMax' id='TaskConditionMax'><i class='ok-icon'></i>设为最大值</button>
+    <button class='layui-btn layui-btn-xs ' lay-event='TaskConditionMin' id='TaskConditionMin'><i class='ok-icon'></i>设为最小值</button>
+    <button class='layui-btn layui-btn-xs ' lay-event='TaskConditionAvg' id='TaskConditionAvg'><i class='ok-icon'></i>设为平均值</button>
+    <button class='layui-btn layui-btn-xs ' lay-event='TaskConditionDel' id='TaskConditionDel'><i class='ok-icon'></i>删除数据</button>
+</script>
+ 
+<script type="text/html" id="zizeng">
+    {{d.LAY_TABLE_INDEX+1}}
+</script>
+
+
