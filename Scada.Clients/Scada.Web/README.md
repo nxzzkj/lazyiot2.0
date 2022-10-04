@@ -1,4 +1,9 @@
-lazyiot
+lazyiot2.0 是基于lazyiot1.0版本进行的打规模升级
+升级后的版本采集效率和系统稳定性更高
+系统采用的是开源influxdb数据
+系统数据文件采用的是sqllit数据库
+
+
 一款开源的web组态，IOT，物联网产品 一款开源的web组态，IOT，物联网产品 ,改开源系统采用分布式集群部署，支持多采集站/数据中心模式，前端采用web显示 开发语言全部是.net/C# 最新版本2021-10-10
 
 目前整个解决方案采用vs2017进行编译，编译后的所有程序放置在系统目录下的Publish,在Publish目录下包含IOCenter和IOStation 两个文件夹。 IOCenter 是中心服务器的应用程序 IOStation 是采集站的应用程序，在该程序下包含三个exe可执行文件：IOManager.exe 采集站工程管理器,IOMonitor.exe负责采集站上的数据采集与转存，ScadaFlowDesign.exe是组态设计器。
